@@ -1,0 +1,10 @@
+com
+org
+net
+edu
+gov
+co
+uk
+io
+info
+biz
