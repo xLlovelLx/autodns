@@ -1,10 +1,14 @@
-import itertools
+import tldextract
+
 
 def tld_expand(domain, tlds_path, verbose):
     """
     Expand the given domain across multiple TLDs (Top-Level Domains).
     """
-    print(f"Expanding domain {domain} across multiple TLDs...")
+    extracted = tldextract.extract(domain)
+    stripped_domain = f"{extracted.domain}"
+    
+    print(f"Expanding domain {stripped_domain} across multiple TLDs...")
 
     try:
         with open(tlds_path, "r") as f:
@@ -12,12 +16,14 @@ def tld_expand(domain, tlds_path, verbose):
     except Exception as e:
         print(f"Error loading TLDs: {e}")
         return []
+    
 
-    expanded_domains = [f"{domain}.{tld}" for tld in tlds]
+    expanded_domains = [f"{stripped_domain}.{tld}" for tld in tlds]
 
     if verbose:
         for expanded in expanded_domains:
             print(f"Expanded: {expanded}")
+            
 
     print(f"Total TLD expansions: {len(expanded_domains)}")
     return expanded_domains

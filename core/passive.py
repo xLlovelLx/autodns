@@ -6,9 +6,9 @@ def passive_enum(domain, output_file, verbose, all_engines):
 
     # List of engines to query
     engines = [
-        {"name": "VirusTotal", "url": f"https://www.virustotal.com/api/v3/domains/{domain}/subdomains", "headers": {"x-apikey": "YOUR_API_KEY"}},
+        {"name": "VirusTotal", "url": f"https://www.virustotal.com/api/v3/domains/{domain}/subdomains", "headers": {"x-apikey": "API_KEY"}},
         {"name": "AlienVault", "url": f"https://otx.alienvault.com/api/v1/indicators/domain/{domain}/passive_dns", "headers": {}},
-        {"name": "Shodan", "url": f"https://api.shodan.io/dns/domain/{domain}?key=YOUR_API_KEY", "headers": {}},
+        {"name": "Shodan", "url": f"https://api.shodan.io/dns/domain/{domain}?key=API_KEY", "headers": {}},
     ]
 
     if not all_engines:

@@ -1,4 +1,6 @@
+import socket
 from dns_enum.error_handling import ErrorHandler
+from dns_enum.threaded_execution import execute_with_threads
 
 def scan_ports(domain, ports, max_threads=10, verbose=False, silent=False):
     """

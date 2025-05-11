@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="dns_enum_advanced",
+    name="autodns",
     version="1.0.0",
     description="Advanced DNS Enumeration Tool",
-    author="Your Name",
-    author_email="your.email@example.com",
-    url="https://github.com/yourgithubuser/advanced-dns-enum",
+    author="LlovelL",
+    author_email="llovellrue@gmail.com",
+    url="https://github.com/xxLlovelLxx/autodns",
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -17,7 +17,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "dns-enum=scripts.main:main",
+            "autodns=cli:main",
         ],
     },
     classifiers=[
