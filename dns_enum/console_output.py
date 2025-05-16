@@ -8,6 +8,7 @@ class ConsoleColors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    
 
 
 def color_print(message, color):

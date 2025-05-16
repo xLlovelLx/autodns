@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoDNS GUI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="mb-4">AutoDNS Web GUI</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-3">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="domain" class="form-label">Domain</label>
+            <input type="text" class="form-control" name="domain" id="domain" required placeholder="example.com">
+        </div>
+        <div class="mb-3">
+            <input type="checkbox" class="form-check-input" name="passive" id="passive">
+            <label class="form-check-label" for="passive">Passive Enumeration</label>
+        </div>
+        <div class="mb-3">
+            <input type="checkbox" class="form-check-input" name="active" id="active">
+            <label class="form-check-label" for="active">Active Probing</label>
+        </div>
+        <div class="mb-3">
+            <input type="checkbox" class="form-check-input" name="brute" id="brute">
+            <label class="form-check-label" for="brute">Brute-force</label>
+        </div>
+        <div class="mb-3">
+            <input type="checkbox" class="form-check-input" name="tld" id="tld">
+            <label class="form-check-label" for="tld">TLD Expansion</label>
+        </div>
+        <div class="mb-3">
+            <input type="checkbox" class="form-check-input" name="verbose" id="verbose">
+            <label class="form-check-label" for="verbose">Verbose Output</label>
+        </div>
+        <div class="mb-3">
+            <label for="wordlist" class="form-label">Wordlist (for brute-force, optional)</label>
+            <input type="file" class="form-control" name="wordlist" id="wordlist">
+        </div>
+        <div class="mb-3">
+            <label for="resolver_file" class="form-label">Resolver File (for brute-force, optional)</label>
+            <input type="file" class="form-control" name="resolver_file" id="resolver_file">
+        </div>
+        <button type="submit" class="btn btn-primary">Start Enumeration</button>
+    </form>
+</div>
+</body>
+</html>

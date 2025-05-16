@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import sys
 import os
 from core.passive import passive_enum
 from core.active import active_enum
@@ -8,6 +9,7 @@ from core.brute import brute_force
 import asyncio
 from dns_enum.output_formats import save_as_csv, save_as_json, save_as_xml
 from scripts.utils import validate_file_path
+from dns_enum.tld_expansion import tld_expand
 
 
 # Get the default paths for subdomains and resolvers
@@ -23,21 +25,20 @@ def main():
     group.add_argument("--domain", help="Target domain for enumeration")
     group.add_argument("--gui", choices=["pyqt","flask"], help="Launch the GUI (pyqt or flask)")
     
-    
-    parser.add_argument("--passive", action="store_true", help="Perform passive enumeration")
     parser.add_argument("--active", action="store_true", help="Perform active DNS probing")
+    parser.add_argument("--passive", action="store_true", help="Perform passive enumeration")
     parser.add_argument("--bruteforce", action="store_true", help="Perform subdomain brute-forcing")
     parser.add_argument("--wordlist", help="Path to custom subdomain wordlist", default=DEFAULT_SUBDOMAINS)
     parser.add_argument("--resolver-file", help="Path to custom DNS resolver list", default=DEFAULT_RESOLVERS)
     parser.add_argument("--zone-transfer", action="store_true", help="Check for DNS zone transfer vulnerabilities")
     parser.add_argument("--ports", help="Comma-separated list of ports to scan")
-    parser.add_argument("--tlds", help="Path to TLDs file for domain expansion" , default=DEFAULT_TLDS)
+    parser.add_argument("--tlds", help="Path to TLDs file for domain expansion" , default=None)
     parser.add_argument("--all-engines", action="store_true", help="Use all available engines for enumeration")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     parser.add_argument("--output", help="Path to save the results", default="results.json")
     parser.add_argument("--output-format", choices=["json", "csv", "xml"], default="json",help="Format to save the results (json, csv, xml)")
     parser.add_argument("--graph", action="store_true", help="Generate a graph visualization of DNS relationships.")
-    parser.add_argument("--securitytrails-key", help="API key for SecurityTrails integration (optional).")
+    
     
     args = parser.parse_args()
     
@@ -47,10 +48,10 @@ def main():
     
     if args.domain:
         
-        if args.passive:
-            results["Passive"] = passive_enum(args.domain, args.output, args.verbose, args.all_engines)
         if args.active:
             results["Active"] = active_enum(args.domain, args.output, args.verbose)
+        if args.passive:
+            results["Passive"] = passive_enum(args.domain, args.output, args.verbose, args.all_engines)
         if args.bruteforce:
             results["BruteForce"] = asyncio.run(brute_force(args.domain, args.wordlist, args.resolver_file, args.output, args.verbose))
         if args.zone_transfer:
@@ -69,7 +70,6 @@ def main():
                 print(f"Port scan results: {port_results}")
     
         if args.tlds:
-            from dns_enum.tld_expansion import tld_expand
             expanded_domains = tld_expand(args.domain, tlds_file, args.tlds)
             results["ExpandedDomains"] = expanded_domains
             print(f"Expanded domains: {expanded_domains}")
@@ -90,11 +90,7 @@ def main():
             from dns_enum.graph import visualize_dns_graph
             visualize_dns_graph(results, output_file="dns_graph.png")
         
-        if args.securitytrails_key:
-            from dns_enum.osint import securitytrails_enum
-            st_results = securitytrails_enum(args.domain, args.securitytrails_key)
-            results["SecurityTrails"] = st_results
-            print(f"SecurityTrails results: {st_results}")
+        
     else:
         print("Error: Please provide a domain for enumeration or use the --gui option to launch the GUI.")
     
@@ -104,9 +100,10 @@ def main():
             from gui_pyqt import launch_pyqt_gui
             launch_pyqt_gui()
         elif args.gui == "flask":
-            print("Launching Flask GUI...")
-            from gui_flask import launch_flask_gui
-            launch_flask_gui()
+            from gui_flask import app
+            print("Launching the AutoDNS web GUI at http://127.0.0.1:5000/")
+            app.run(debug=True)
+            sys.exit(0)
         return  # Exit after launching the GUI
 
     

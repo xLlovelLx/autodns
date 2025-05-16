@@ -1,4 +1,5 @@
 import yaml
+from dns_enum.console_output import color_print, ConsoleColors
 
 def load_config(config_path="config.yaml"):
     """

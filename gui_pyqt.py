@@ -2,17 +2,54 @@ import sys
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton, QCheckBox, QFileDialog, QWidget, QHBoxLayout, QTextEdit
 )
+from PyQt5.QtCore import QThread, pyqtSignal
 from core.passive import passive_enum
 from core.active import active_enum
 from core.brute import brute_force
 import asyncio
+from PyQt5.QtCore import QThread, pyqtSignal
+
+class EnumerationThread(QThread):
+    results_signal = pyqtSignal(str)  # Signal to send results back to the GUI
+
+    def __init__(self, domain, wordlist, resolver_file, verbose, all_engines, passive, active, bruteforce):
+        super().__init__()
+        self.domain = domain
+        self.wordlist = wordlist
+        self.resolver_file = resolver_file
+        self.verbose = verbose
+        self.all_engines = all_engines
+        self.passive = passive
+        self.active = active
+        self.bruteforce = bruteforce
+
+    def run(self):
+        results = ""
+        try:
+            if self.passive:
+                results += "Starting Passive Enumeration...\n"
+                results += passive_enum(self.domain, None, self.verbose, self.all_engines) + "\n"
+
+            if self.active:
+                results += "Starting Active DNS Probing...\n"
+                results += active_enum(self.domain, None, self.verbose) + "\n"
+
+            if self.bruteforce:
+                results += "Starting Subdomain Brute-forcing...\n"
+                results += brute_force(self.domain, self.wordlist, self.resolver_file, None, self.verbose) + "\n"
+
+            results += "Enumeration Process Completed.\n"
+        except Exception as e:
+            results += f"Error: {e}\n"
+
+        self.results_signal.emit(results)  # Send results back to the GUI
+
 
 class AutoDNSGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("AutoDNS - GUI")
         self.setGeometry(100, 100, 800, 600)
-        
 
         # Main Layout
         layout = QVBoxLayout()
@@ -44,19 +81,13 @@ class AutoDNSGUI(QMainWindow):
         resolver_layout.addWidget(self.resolver_button)
         layout.addWidget(self.resolver_label)
         layout.addLayout(resolver_layout)
-        
+
         # Output Display
         self.results_label = QLabel("Results:")
         self.results_display = QTextEdit()
         self.results_display.setReadOnly(True)
         layout.addWidget(self.results_label)
         layout.addWidget(self.results_display)
-
-        # Output File Input
-        self.output_label = QLabel("Output File:")
-        self.output_input = QLineEdit()
-        layout.addWidget(self.output_label)
-        layout.addWidget(self.output_input)
 
         # Checkboxes for Options
         self.passive_checkbox = QCheckBox("Perform Passive Enumeration")
@@ -97,43 +128,21 @@ class AutoDNSGUI(QMainWindow):
         resolver_file = self.resolver_input.text()
         verbose = self.verbose_checkbox.isChecked()
         all_engines = self.all_engines_checkbox.isChecked()
-        results={}
-
-        # Clear previous results
-        self.results_display.clear()
+        passive = self.passive_checkbox.isChecked()
+        active = self.active_checkbox.isChecked()
+        bruteforce = self.bruteforce_checkbox.isChecked()
 
         if not domain:
             self.results_display.append("Error: Please enter a target domain.")
             return
 
-        # Perform enumerations
-        if self.passive_checkbox.isChecked():
-            self.results_display.append("Starting Passive Enumeration...\n")
-            try:
-                results["passive"]=passive_enum(domain, "results.json" or  None, verbose, all_engines)
-                self.results_display.append(f"Passive Enumeration Results:\n{results["passive"]}\n")
-            except Exception as e:
-                self.results_display.append(f"Error during passive enumeration: {e}\n")
+        # Create and start the thread
+        self.thread = EnumerationThread(domain, wordlist, resolver_file, verbose, all_engines, passive, active, bruteforce)
+        self.thread.results_signal.connect(self.display_results)
+        self.thread.start()
 
-        if self.active_checkbox.isChecked():
-            self.results_display.append("Starting Active DNS Probing...\n")
-            try:
-                results["active"]=active_enum(domain, "results.json" or None, True)
-                self.results_display.append(f"Active Enumeration Results:\n{results["active"]}\n")
-            except Exception as e:
-                self.results_display.append(f"Error during active probing: {e}\n")
-
-        if self.bruteforce_checkbox.isChecked():
-            self.results_display.append("Starting Subdomain Brute-forcing...\n")
-            try:
-                results["BruteForce"]=asyncio.run(brute_force(domain, wordlist or None, resolver_file or None, "results.json" or None, verbose))
-                self.results_display.append(f"Brute Force Enumeration Results:\n{results["BruteForce"]}\n")
-            except Exception as e:
-                self.results_display.append(f"Error during brute-forcing: {e}\n")
-
-        self.results_display.append("Enumeration Process Completed.\n")
-
-
+    def display_results(self, results):
+        self.results_display.append(results)
 def launch_pyqt_gui():
     app = QApplication(sys.argv)
     gui = AutoDNSGUI()

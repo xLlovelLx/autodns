@@ -39,3 +39,5 @@ async def brute_force(domain, wordlist_path, resolver_file_path, output_file, ve
     with open(output_file, "w") as f:
         f.write(str(found))
     print(f"Brute-force results saved to {output_file}")
+    
+    return found

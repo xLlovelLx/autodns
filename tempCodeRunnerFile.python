@@ -1,0 +1,23 @@
+import requests
+import yaml
+from dns_enum.output_formats import save_as_json, save_as_csv, save_as_xml
+
+api_key = "K7XyIBJU1jipnQRBQd97jVgP8qzaJTtH"
+url = f"https://api.securitytrails.com/v1/domain/oracle.com/subdomains?apikey={api_key}"
+results={}
+headers = {"accept": "application/json"}
+print(headers)
+response = requests.get(url, headers=headers)
+results["subdomains"]=response.json()["subdomains"]
+save_as_json(results,"results.json")
+
+
+"""def load_api_keys(config_path='config.yaml'):
+    with open(config_path, 'r') as file:
+        keys = yaml.safe_load(file)
+    return keys
+
+# Usage example
+api_keys = load_api_keys()['api_keys']
+
+print("SecurityTrails Key:", api_keys.get('securitytrails'))"""

@@ -1,19 +1,21 @@
 import requests
 from lxml import etree
+from scripts.config_loader import load_config
 
-def securitytrails_enum(domain, api_key, verbose=False):
+
+def securitytrails_enum(domain, url, header, verbose=False):
     """
     Enumerate subdomains using the SecurityTrails API.
     """
-    url = f"https://api.securitytrails.com/v1/domain/{domain}/subdomains"
-    headers = {"APIKEY": api_key}
+
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=header)
         if response.status_code == 200:
             subdomains = response.json().get("subdomains", [])
             if verbose:
                 for sub in subdomains:
-                    print(f"Found subdomain: {sub}.{domain}")
+                    if verbose:
+                        print(f"Found subdomain: {sub}.{domain}")
             return [f"{sub}.{domain}" for sub in subdomains]
         else:
             print(f"SecurityTrails API error: {response.status_code}")
@@ -21,11 +23,13 @@ def securitytrails_enum(domain, api_key, verbose=False):
     except Exception as e:
         print(f"Error querying SecurityTrails: {e}")
         return []
+    
 def threatcrowd_enum(domain, api_key, verbose=False):
     """
     Enumerate subdomains using the ThreatCrowd API.
     """
-    url = f"https://threatcrowd.org/api/v3/domainReport/1.0/{domain}"
+    
+    url = f"https://www.threatcrowd.org/searchApi/v2/domain/report/?domain={domain}"
     headers = {"TC_APIKEY": api_key}
     try:
         response = requests.get(url, headers=headers)

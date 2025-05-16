@@ -32,3 +32,4 @@ def save_results_to_file(results, output_file):
         print(f"Results saved to {output_file}")
     except Exception as e:
         print(f"Error saving results to file: {e}")
+        

@@ -22,5 +22,9 @@ network:
 
 # API keys (if needed)
 api_keys:
-  crtsh: ""
+  crtsh: null
   virustotal: ""
+  securitytrails: "ot7yZ0WQ7qmp_jFB7AwzbRFnIh08cP4N"
+  shodan: ""
+  censys: ""
+  threatcrowd: ""

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Results - AutoDNS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h1>Enumeration Results</h1>
+    {% if result %}
+        <pre class="bg-light p-3 rounded">{{ result }}</pre>
+    {% else %}
+        <div class="alert alert-info">No results yet, please refresh the page in a few seconds.</div>
+    {% endif %}
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back</a>
+</div>
+</body>
+</html>

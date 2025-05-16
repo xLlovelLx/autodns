@@ -1,15 +1,25 @@
 {
-    "Active": null,
-    "ExpandedDomains": [
-        "example.com",
-        "example.org",
-        "example.net",
-        "example.edu",
-        "example.gov",
-        "example.co",
-        "example.uk",
-        "example.io",
-        "example.info",
-        "example.biz"
-    ]
+    "Active": {
+        "A": [
+            "172.217.18.46"
+        ],
+        "AAAA": [
+            "2a00:1450:4006:812::200e"
+        ],
+        "MX": [
+            "10 smtp.google.com."
+        ],
+        "NS": [
+            "ns2.google.com.",
+            "ns1.google.com.",
+            "ns4.google.com.",
+            "ns3.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+    }
 }
