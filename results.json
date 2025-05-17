@@ -1,25 +1,8 @@
 {
-    "Active": {
-        "A": [
-            "172.217.18.46"
-        ],
-        "AAAA": [
-            "2a00:1450:4006:812::200e"
-        ],
-        "MX": [
-            "10 smtp.google.com."
-        ],
-        "NS": [
-            "ns2.google.com.",
-            "ns1.google.com.",
-            "ns4.google.com.",
-            "ns3.google.com."
-        ],
-        "SPF": [],
-        "NSEC": [],
-        "NSEC3": [],
-        "DS": [],
-        "DNSKEY": [],
-        "RRSIG": []
+    "BruteForce": {
+        "www.example.com": [
+            "2.16.88.84",
+            "2.16.88.90"
+        ]
     }
 }

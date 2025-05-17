@@ -84,7 +84,8 @@
                     <i class="fa fa-play-circle"></i> Start New Enumeration
                 </div>
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
+                    {% if show_form is not defined or show_form %}
+                    <form method="post" action="/" enctype="multipart/form-data">
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label for="domain" class="form-label">Domain</label>
@@ -133,8 +134,26 @@
                             <button type="submit" class="btn btn-success"><i class="fa fa-bolt"></i> Start</button>
                         </div>
                     </form>
+                    {% endif %}
                 </div>
             </div>
+
+            <!-- Active Tasks Card 
+            {% if result %}
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-success text-white">
+                    <i class="fa-solid fa-magnifying-glass"></i> Latest Enumeration Results
+                </div>
+                <div class="card-body">
+                    <pre>{{ result|tojson(indent=2) }}</pre>
+                    {% if verbose_output %}
+                    <hr>
+                    <h6>Verbose Output:</h6>
+                    <pre>{{ verbose_output }}</pre>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}-->
             <!-- History Card -->
             <div class="card shadow-sm mt-4">
                 <div class="card-header bg-secondary text-white">
@@ -149,7 +168,9 @@
                                 <th>Timestamp</th>
                                 <th>Domain</th>
                                 <th>Type</th>
+                                <th>Actions</th>
                                 <th>Result</th>
+                            
                             </tr>
                         </thead>
                         <tbody>
@@ -162,6 +183,15 @@
                                         <span class="badge bg-info text-dark">{{ t }}</span>
                                     {% endfor %}
                                 </td>
+                                <td>
+                                    
+                                    <form action="{{ url_for('delete_history', result_key=item.result_key) }}" method="post" style="display:inline;">
+                                      <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this entry?');">Delete</button>
+                                    </form>
+                                    <form action="{{ url_for('redo_history', result_key=item.result_key) }}" method="post" style="display:inline;">
+                                      <button type="submit" class="btn btn-sm btn-outline-warning">Redo</button>
+                                    </form>
+                                  </td>
                                 <td>
                                     <a class="btn btn-sm btn-outline-primary" href="{{ url_for('results', key=item.result_key) }}">
                                         View
@@ -176,10 +206,10 @@
                         <div class="alert alert-info mb-0">No previous enumerations yet.</div>
                     {% endif %}
                 </div>
-            </div>
+            </div> 
 
             
-            <!-- Results Dashboard Card -->
+            <!-- Results Dashboard Card 
             {% if result %}
             <div class="card shadow-sm mt-4">
                 <div class="card-header bg-success text-white">
@@ -204,7 +234,8 @@
                     </div>
                 </div>
             </div>
-            {% endif %}
+            {% endif %}-->
+
         </main>
     </div>
 </div>

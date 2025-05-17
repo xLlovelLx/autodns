@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 import os
 import threading
-
 from core.passive import passive_enum
 from core.active import active_enum
 from core.brute import brute_force
@@ -10,7 +9,13 @@ import json
 from datetime import datetime
 
 HISTORY_FILE = 'enumeration_history.json'
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+results_store = {}
 def load_history():
     if not os.path.exists(HISTORY_FILE):
         return []
@@ -32,15 +37,8 @@ def add_history_entry(domain, enumeration_types, result_key):
     history.insert(0, entry)  # Most recent first
     save_history(history)
 
-app = Flask(__name__)
-app.secret_key = 'your_secret_key'
-UPLOAD_FOLDER = 'uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-results_store = {}
-
 def run_enumeration(params, result_key):
+    
     domain = params['domain']
     passive = params.get('passive')
     active = params.get('active')
@@ -65,9 +63,15 @@ def run_enumeration(params, result_key):
     except Exception as e:
         output["Error"] = str(e)
     results_store[result_key] = output
+    return results_store 
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    history=load_history()
+    result=None
+    verbose_output = None
+    
     if request.method == 'POST':
         domain = request.form['domain']
         passive = 'passive' in request.form
@@ -75,9 +79,9 @@ def index():
         brute = 'brute' in request.form
         verbose = 'verbose' in request.form
         tld = 'tld' in request.form
-
         wordlist_path = None
         resolver_file = None
+        
         if 'wordlist' in request.files and request.files['wordlist'].filename:
             file = request.files['wordlist']
             filename = secure_filename(file.filename)
@@ -100,6 +104,7 @@ def index():
             'wordlist_path': wordlist_path,
             'resolver_file': resolver_file
         }
+        
         enumeration_types = []
         if passive: 
             enumeration_types.append('Passive')
@@ -107,15 +112,49 @@ def index():
             enumeration_types.append('Active')
         if brute: 
             enumeration_types.append('Brute-force')
-        thread = threading.Thread(target=run_enumeration, args=(params, result_key))
-        thread.start()
+            
+        result = run_enumeration(params, result_key)
+        #thread = threading.Thread(target=run_enumeration, args=(params, result_key))
+        #thread.start()
+        
         add_history_entry(domain, enumeration_types, result_key)
-        flash('Enumeration started, please refresh to see results.', 'info')
-        return redirect(url_for('results', key=result_key))
+        
+        ##flash('Enumeration started, please refresh to see results.', 'info')
+       # return redirect(url_for('index'))
 
-    return render_template('dashboard.html', history=load_history())
+    return render_template('dashboard.html', result=result ,history=load_history())
     
-    
+@app.route('/delete_history/<result_key>', methods=['POST'])
+def delete_history(result_key):
+    history = load_history()
+    new_history = [entry for entry in history if entry['result_key'] != result_key]
+    save_history(new_history)
+    flash("Enumeration history entry deleted.", "success")
+    return redirect(url_for('index'))
+
+@app.route('/redo_history/<result_key>', methods=['POST'])
+def redo_history(result_key):
+    history = load_history()
+    entry = next((h for h in history if h["result_key"] == result_key), None)
+    if entry:
+        params = entry["params"]
+        result = run_enumeration(params, result_key)
+        new_entry = {
+            "result_key": os.urandom(8).hex(),
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "domain": params["domain"],
+            "params": params,
+            "result": result,
+        }
+        add_history_entry(new_entry["domain"], new_entry["params"]["types"], new_entry["result_key"], new_entry["params"])
+        flash("Enumeration re-run complete.", "info")
+    else:
+        flash("History entry not found.", "danger")
+    return redirect(url_for("index"))
+
+
+
+
 @app.route('/results/<key>', methods=['GET'])
 def results(key):
     result = results_store.get(key, None)
