@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>autodns Dashboard</title>
+    <style>
+        body { display: flex; margin: 0; }
+        .sidebar {
+            width: 220px;
+            background: #f3f3f3;
+            padding: 1em;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .sidebar .nav-link {
+            display: block;
+            margin: 1em 0;
+            text-decoration: none;
+            color: #222;
+            font-weight: bold;
+        }
+        .sidebar .active {
+            color: #1976d2;
+        }
+        .main { flex-grow: 1; padding: 2em; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>autodns</h2>
+        <a href="{{ url_for('index') }}" class="nav-link{% if active_page == 'dashboard' %} active{% endif %}">Dashboard</a>
+        <a href="{{ url_for('settings') }}" class="nav-link{% if active_page == 'settings' %} active{% endif %}">Settings</a>
+    </div>
+    <div class="main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+              <li><strong>{{ category.title() }}:</strong> {{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

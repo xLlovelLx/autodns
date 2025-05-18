@@ -1,8 +1,45 @@
 {
+    "Active": {
+        "A": [
+            "96.7.128.198",
+            "23.192.228.80",
+            "23.192.228.84",
+            "23.215.0.136",
+            "23.215.0.138",
+            "96.7.128.175"
+        ],
+        "AAAA": [
+            "2600:1406:bc00:53::b81e:94c8",
+            "2600:1406:bc00:53::b81e:94ce",
+            "2600:1408:ec00:36::1736:7f24",
+            "2600:1408:ec00:36::1736:7f31",
+            "2600:1406:3a00:21::173e:2e65",
+            "2600:1406:3a00:21::173e:2e66"
+        ],
+        "MX": [
+            "0 ."
+        ],
+        "NS": [
+            "b.iana-servers.net.",
+            "a.iana-servers.net."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [
+            "370 13 2 be74359954660069d5c63d200c39f5603827d7dd02b56f120ee9f3a86764247c"
+        ],
+        "DNSKEY": [
+            "256 3 13 bqwx9AZVDIwJxfcJEALNo0Rn9vZIXQIA jp2bn9WK86KOJeRFB+L3ojCh8famqBCS G6CPRVp6nNCPnS28vV5R7Q==",
+            "257 3 13 kXKkvWU3vGYfTJGl3qBd4qhiWp5aRs7Y tkCJxD2d+t7KXqwahww5IgJtxJT2yFIt lggazyfXqJEVOmMJ3qT0tQ==",
+            "256 3 13 L1QKNYXu7+Bn+2xzyYvDFHQnSUk0nOVi D5lFc0+BKUjPKbYWJdW/aatti5pA9P/3 uAgOYyTaJurJUYUIJCFaDQ=="
+        ],
+        "RRSIG": []
+    },
     "BruteForce": {
         "www.example.com": [
-            "2.16.88.84",
-            "2.16.88.90"
+            "168.253.110.8",
+            "168.253.110.16"
         ]
     }
 }

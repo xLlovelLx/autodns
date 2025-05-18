@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Settings</h2>
+    <form method="POST">
+        <label>Config Option:</label>
+        <input type="text" name="config_option" value="{{ config.get('config_option', '') }}">
+        <button type="submit">Save</button>
+    </form>
+    <!-- Add more config fields as needed -->
+{% endblock %}

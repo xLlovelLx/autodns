@@ -5,6 +5,31 @@
       "Active",
       "Brute-force"
     ],
+    "result_key": "24f86089b0493617",
+    "timestamp": "2025-05-17 03:36:53"
+  },
+  {
+    "domain": "example.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "1e224824522e27ca",
+    "timestamp": "2025-05-17 03:36:03"
+  },
+  {
+    "domain": "example.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "e1bc398b147e7b87",
+    "timestamp": "2025-05-17 03:35:56"
+  },
+  {
+    "domain": "example.com",
+    "types": [
+      "Active",
+      "Brute-force"
+    ],
     "result_key": "598556395039ea49",
     "timestamp": "2025-05-17 03:34:15"
   },
