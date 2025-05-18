@@ -205,7 +205,7 @@ def redo_history(result_key):
 
 
 
-@app.route('/results/<key>', methods=['GET'])
+@app.route('/result/<key>', methods=['GET'])
 def results(key):
     result = results_store.get(key, None)
     return render_template('dashboard.html', result=result, key=key, history=load_history())
