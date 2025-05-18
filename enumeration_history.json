@@ -65,14 +65,5 @@
     ],
     "result_key": "a1ed8136db088571",
     "timestamp": "2025-05-16 22:50:48"
-  },
-  {
-    "domain": "example.com",
-    "types": [
-      "Passive",
-      "Active"
-    ],
-    "result_key": "5eef18b3783bd3e8",
-    "timestamp": "2025-05-16 22:44:17"
   }
 ]

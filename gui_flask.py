@@ -39,13 +39,14 @@ def save_history(history):
     with open(HISTORY_FILE, 'w') as f:
         json.dump(history, f, indent=2)
 
-def add_history_entry(domain, enumeration_types, result_key):
+def add_history_entry(entry):
     history = load_history()
     entry = {
-        'domain': domain,
-        'types': enumeration_types,
-        'result_key': result_key,
-        'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        'domain': entry.get["domain"],
+        'result_key': entry.get["result_key"],
+        'params': entry.get["params"],
+        'timestamp': entry.get["timestamp"],
+        'results':entry.get["result"]
     }
     history.insert(0, entry)  # Most recent first
     save_history(history)
@@ -79,7 +80,7 @@ def run_enumeration(params):
         'domain': domain,
         'types': output.keys(),
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "result": f"Results for {params['domain']} with {params}"
+        "result": output#f"Results for {params['domain']} with {params}"
         
     }
     return results_store 
@@ -114,7 +115,7 @@ def index():
                 resolver_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(resolver_file)
 
-            result_key = os.urandom(8).hex()
+            
             params = {
                 'domain': domain,
                 'passive': passive,
@@ -138,16 +139,17 @@ def index():
             #thread = threading.Thread(target=run_enumeration, args=(params, result_key))
             #thread.start()
             entry = {
-                    "result_key": os.urandom(8).hex(),
-                    "timestamp": result["timestamp"],
                     "domain": domain,
+                    "result_key": os.urandom(8).hex(),
                     "params": params,
+                    "timestamp": result["timestamp"],
                     "result": result,
                 }
-            history.insert(0, entry)
+            #history.insert(0, entry)
+            add_history_entry(entry)
             save_history(history)
             flash("Enumeration complete.", "success")
-            #add_history_entry(domain, enumeration_types, result_key)
+            
         # Handling settings update
         elif "save_config" in request.form:
             # Example: update a config setting (customize as needed)
@@ -158,8 +160,9 @@ def index():
         ##flash('Enumeration started, please refresh to see results.', 'info')
        # return redirect(url_for('index'))
     # Show latest result if available
+    
     if history:
-        result = history[0]["result"]
+        result = history[0].get("result")
 
     return render_template(
         "dashboard.html",
@@ -185,10 +188,10 @@ def redo_history(result_key):
         params = entry["params"]
         result = run_enumeration(params)
         new_entry = {
-            "result_key": os.urandom(8).hex(),
-            "timestamp": result["timestamp"],
             "domain": params["domain"],
+            "result_key": os.urandom(8).hex(),
             "params": params,
+            "timestamp": result["timestamp"],
             "result": result,
         }
         history.insert(0, new_entry)
