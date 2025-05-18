@@ -42,11 +42,11 @@ def save_history(history):
 def add_history_entry(entry):
     history = load_history()
     entry = {
-        'domain': entry.get["domain"],
-        'result_key': entry.get["result_key"],
-        'params': entry.get["params"],
-        'timestamp': entry.get["timestamp"],
-        'results':entry.get["result"]
+        'domain': entry.get("domain"),
+        'result_key': entry.get("results_key"),
+        'params': entry.get("params"),
+        'timestamp': entry.get("timestamp"),
+        'result':entry.get("result")
     }
     history.insert(0, entry)  # Most recent first
     save_history(history)
@@ -147,7 +147,7 @@ def index():
                 }
             #history.insert(0, entry)
             add_history_entry(entry)
-            save_history(history)
+            #save_history(history) -- removed for redundancy, now handled in add_history_entry
             flash("Enumeration complete.", "success")
             
         # Handling settings update
