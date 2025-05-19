@@ -161,6 +161,7 @@
                 </div>
                 <div class="card-body">
                     <p class="mb-0">No active enumeration tasks found. Start a new task to see results here.</p>
+                </div>
             </div>
             {% endif %}
             <!-- History Card -->
@@ -218,8 +219,8 @@
             </div> 
 
             
-            <!-- Results Dashboard Card 
-            {% if result %}
+            <!--Results Dashboard Card -->
+            {% if result.result %}
             <div class="card shadow-sm mt-4">
                 <div class="card-header bg-success text-white">
                     <i class="fa-solid fa-list-check"></i> Enumeration Results
@@ -243,7 +244,7 @@
                     </div>
                 </div>
             </div>
-            {% endif %}-->
+            {% endif %}
 
         </main>
     </div>

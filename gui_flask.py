@@ -13,7 +13,7 @@ HISTORY_FILE = 'enumeration_history.json'
 CONFIG_FILE = "config.yaml"
 app = Flask(__name__)
 app.secret_key = 'secret'
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = 'data'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -79,8 +79,8 @@ def run_enumeration(params):
     results_store = {
         'domain': domain,
         'types': output.keys(),
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "result": output#f"Results for {params['domain']} with {params}"
+        'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        'result': output#f"Results for {params['domain']} with {params}"
         
     }
     return results_store 
@@ -136,8 +136,10 @@ def index():
                 enumeration_types.append('Brute-force')
             """    
             result = run_enumeration(params)
-            #thread = threading.Thread(target=run_enumeration, args=(params, result_key))
-            #thread.start()
+            thread = threading.Thread(target=run_enumeration, args=(params))
+            thread.start()
+            result=thread.join()  # Wait for the thread to finish
+            
             entry = {
                     "domain": domain,
                     "result_key": os.urandom(8).hex(),
@@ -145,6 +147,7 @@ def index():
                     "timestamp": result["timestamp"],
                     "result": result,
                 }
+            
             #history.insert(0, entry)
             add_history_entry(entry)
             #save_history(history) -- removed for redundancy, now handled in add_history_entry
@@ -163,10 +166,11 @@ def index():
     
     if history:
         result = history[0].get("result")
-
+        
+    
     return render_template(
         "dashboard.html",
-        history=history,
+        history=load_history(),
         result=result,
         config=config
     )
