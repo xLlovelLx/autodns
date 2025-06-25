@@ -17,14 +17,207 @@ paths:
 
 # Network settings
 network:
-  timeout: 10  # Timeout for network requests in seconds
-  retries: 3   # Number of retries for failed network requests
+  timeout: '10' # Timeout for network requests in seconds
+  retries: '3' # Number of retries for failed network requests
 
 # API keys (if needed)
 api_keys:
-  crtsh: null
+  crtsh: ''
   virustotal: ""
   securitytrails: "ot7yZ0WQ7qmp_jFB7AwzbRFnIh08cP4N"
   shodan: ""
   censys: ""
   threatcrowd: ""
+
+#DNS Providers
+dns_providers:
+  url:
+    opendns: "https://doh.opendns.com/dns-query"
+    dnsimple: "https://dns.dnsimple.com/resolve"
+    adguard: "https://dns.adguard.com/dns-query"
+    cloudflare: "https://cloudflare-dns.com/dns-query"
+    google: 
+      - "https://dns.google/resolve"
+      - "https://dns.google/dns-query"
+    quad9: "https://dns.quad9.net/dns-query"
+    cleanbrowsing: "https://doh.cleanbrowsing.org/doh/family-filter/"
+    dnswatch: "https://dns.watch/dns-query"
+    dnscrypt: "https://dnscrypt.info/dns-query"
+    dnswarden: "https://dnswarden.com/dns-query"
+    dnsforge: "https://dnsforge.de/dns-query"
+    dnsprivacy: "https://dnsprivacy.org/dns-query"
+    dnscrypt_proxy: "https://doh.dnscrypt.info/dns-query"
+    dnsfilter: "https://dnsfilter.org/dns-query"
+
+  address:
+    opendns:
+      ip: 
+        - "208.67.222.222"
+        - "208.67.220.220"
+      hostname: "dns.opendns.com"
+    dnsimple:
+      ip: [] # Not public
+      hostname: []
+    adguard:
+      ip: 
+        - "94.140.14.14"
+        - "94.140.15.15"
+      hostname: "dns.adguard-dns.com"
+    cloudflare:
+      ip:
+        - "1.1.1.1"
+        - "1.0.0.1"
+      hostname: "cloudflare-dns.com"
+    google:
+      ip:
+        - "8.8.8.8"
+        - "8.8.4.4"
+      hostname: "dns.google"
+    quad9:
+      ip:
+        - "9.9.9.9"
+        - "149.112.112.112"
+      hostname: "dns.quad9.net"
+    cleanbrowsing:
+      ip:
+        - "185.228.168.168"
+        - "185.228.169.168"
+      hostname: "cleanbrowsing.org"
+
+    dnswatch: 
+      ip:
+        - "84.200.69.80"
+        - "84.200.70.40"
+      hostname:  "dns.watch"
+    dnscrypt:  # Not public
+      ip: []
+      hostname: []
+    dnswarden: 
+      ip: 
+        - "116.203.70.156"
+        - "116.203.35.255"
+      hostname: "dnswarden.com"
+    dnsforge: 
+      ip: 
+        - "176.9.93.198"
+        - "176.9.1.117"
+      hostname : "dnsforge.net"
+    dnsprivacy: 
+      ip: 
+        - "145.100.185.15"
+        - "145.100.185.16"
+      hostname: "dnsprivacy.net"
+    dnscrypt_proxy:  # Not public
+      ip: []
+      hostname: []
+
+
+# Output settings
+output:
+  format: "json"  # Options: json, csv, text
+  directory: "output"
+  filename: "results"
+
+# Proxy settings
+proxy:
+  enabled: false
+  type: "http"  # Options: http, socks5
+  address: "http://localhost:5000"
+
+# Rate limiting settings
+rate_limiting:
+  enabled: false
+  requests_per_second: 10  # Number of requests allowed per second
+  burst: 5  # Maximum burst of requests allowed
+
+# Security settings
+security:
+  enable_ssl_verification: true  # Enable SSL certificate verification
+  allowed_domains: []  # List of domains to allow for requests
+  blocked_domains: []  # List of domains to block for requests
+
+# Feature toggles
+features:
+  dns_brute_force: true  # Enable DNS brute force enumeration
+  dns_zone_transfer: false  # Enable DNS zone transfer enumeration
+  dns_reverse_lookup: true  # Enable reverse DNS lookup
+  api_integrations: true  # Enable API integrations for additional data sources
+  rate_limiting: false  # Enable rate limiting for network requests
+  proxy_support: false  # Enable proxy support for network requests
+# User interface settings
+ui:
+  theme: "dark"  # Options: light, dark
+#DNS Types
+dns_types:
+  a: true
+  aaaa: true
+  cname: true
+  mx: true
+  ns: true
+  txt: false
+  soa: false
+  srv: false 
+  ptr: false
+  spf: false
+  caa: false
+  dnskey: false
+  nsec: false
+  nsec3: false
+  nsec3param: false
+  rrsig: false
+  ds: false
+  dname: false
+  cdnskey: false
+  cds: false
+  tlsa: false
+  smimea: false
+  sshfp: false
+  loc: false
+  naptr: false
+  uri: false
+  cert: false
+  hip: false
+  openpgpkey: false
+  svcb: false
+  alpn: false
+  https: false
+  afsdb: false
+  apl: false
+  ipseckey: false
+  rp: false
+  hinfo: false
+  minfo: false
+  mg: false
+  mb: false
+  mr: false
+  px: false
+  x25: false
+  isdn: false
+  nsap: false
+  nsap_ptr: false
+  gpos: false
+  eui48: false
+  eui64: false
+  sink: false
+  ta: false
+  dlv: false
+  wks: false
+  maila: false
+  mailb: false
+  nimloc: false
+  atma: false
+  
+
+# Advanced settings
+advanced:
+  max_concurrent_requests: 10  # Maximum number of concurrent requests
+  dns_timeout: 5  # Timeout for DNS queries in seconds
+  dns_retries: 1  # Number of retries for DNS queries
+  log_level: "DEBUG"  # Log level for detailed debugging information
+  enable_debug_mode: false  # Enable debug mode for additional logging and output
+  
+# Database settings (if applicable)
+database:
+  type: "sqlite"  # Options: sqlite, postgresql, mysql
+  connection_string: "sqlite:///data/app.db"  # Connection string for the database
+  enable_migrations: true  # Enable database migrations on startup

@@ -36,7 +36,7 @@ class EnumerationThread(QThread):
 
             if self.bruteforce:
                 results += "Starting Subdomain Brute-forcing...\n"
-                results += brute_force(self.domain, self.wordlist, self.resolver_file, None, self.verbose) + "\n"
+                results += asyncio.run(brute_force(self.domain, self.wordlist, self.resolver_file, None, self.verbose)) + "\n"
 
             results += "Enumeration Process Completed.\n"
         except Exception as e:

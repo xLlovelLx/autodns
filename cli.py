@@ -6,6 +6,7 @@ import os
 from core.passive import passive_enum
 from core.active import active_enum
 from core.brute import brute_force
+from dns_enum.advanced_dns_records import dns_over_https,dns_over_tls
 import asyncio
 from dns_enum.output_formats import save_as_csv, save_as_json, save_as_xml
 from scripts.utils import validate_file_path
@@ -14,7 +15,7 @@ from dns_enum.tld_expansion import tld_expand
 
 # Get the default paths for subdomains and resolvers
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_SUBDOMAINS = os.path.join(BASE_DIR, "data", "subdomains.txt")
+DEFAULT_SUBDOMAINS = os.path.join(BASE_DIR, "data", "subdomains2.txt")
 DEFAULT_RESOLVERS = os.path.join(BASE_DIR, "data", "resolvers.txt")
 DEFAULT_TLDS = os.path.join(BASE_DIR, "data", "tlds.txt")
 
@@ -25,7 +26,8 @@ def main():
     group.add_argument("--domain", help="Target domain for enumeration")
     group.add_argument("--gui", choices=["pyqt","flask"], help="Launch the GUI (pyqt or flask)")
     
-    parser.add_argument("--active", action="store_true", help="Perform active DNS probing")
+    parser.add_argument("--active", action="store_true", help="Perform active DNS probing, including A, AAAA, CNAME, MX, TXT, and NS records, as well as advanced records like SPF, NSEC, NSEC3, DS, DNSKEY, and RRSIG.\nit uses DNS over UDP by default, it will automatically retry using DNS over TCP if UDP fails.")
+    parser.add_argument("--protocol",nargs="+",choices=["doh","dot"],help="Use specific DNS protocols for active probing,doh for DNS over HTTPS, dot for DNS over TLS\nUsing --protocol without any arguments will use all protocols by default.\nYou can Configure the default providers in config.yaml")
     parser.add_argument("--passive", action="store_true", help="Perform passive enumeration")
     parser.add_argument("--bruteforce", action="store_true", help="Perform subdomain brute-forcing")
     parser.add_argument("--wordlist", help="Path to custom subdomain wordlist", default=DEFAULT_SUBDOMAINS)
@@ -43,17 +45,25 @@ def main():
     args = parser.parse_args()
     
     tlds_file = validate_file_path(args.tlds, DEFAULT_TLDS)
-
+    
+    
     results = {}
     
     if args.domain:
         
         if args.active:
             results["Active"] = active_enum(args.domain, args.output, args.verbose)
+        if args.protocol:
+            if args.protocol == ["doh"]:
+                print("Using DNS over HTTPS for active probing.")
+                results["DoH"]=dns_over_https(args.domain, output_file=args.output, verbose=args.verbose)
+            elif args.protocol == ["dot"]:
+                print("Using DNS over TLS for active probing.")
+                results["DoT"]=dns_over_tls(args.domain, output_file=args.output, verbose=args.verbose)
         if args.passive:
             results["Passive"] = passive_enum(args.domain, args.output, args.verbose, args.all_engines)
         if args.bruteforce:
-            results["BruteForce"] = asyncio.run(brute_force(args.domain, args.wordlist, args.resolver_file, args.output, args.verbose))
+            results["BruteForce"] = brute_force(args.domain, args.wordlist, args.resolver_file, args.output, args.verbose)
         if args.zone_transfer:
             from dns_enum.zone_transfer import check_zone_transfer
             zone_results = check_zone_transfer(args.domain, args.verbose)

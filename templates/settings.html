@@ -1,10 +1,59 @@
+<!-- filepath: c:\Users\RAMY\vscodes\pythons\autodns\templates\settings.html -->
 {% extends "base.html" %}
 {% block content %}
-    <h2>Settings</h2>
-    <form method="POST">
-        <label>Config Option:</label>
-        <input type="text" name="config_option" value="{{ config.get('config_option', '') }}">
-        <button type="submit">Save</button>
-    </form>
-    <!-- Add more config fields as needed -->
+<main class="col-md-10 ms-sm-auto px-md-5 py-4">
+    <div class="dashboard-header mb-4">
+        <h2><i class="fa-solid fa-cog"></i> Settings</h2>
+        <p class="text-secondary mb-0">Configure your AutoDNS settings.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-3">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="fa fa-cogs"></i> Update Configuration
+        </div>
+        <div class="card-body">
+            <form method="post" action="{{ url_for('settings') }}">
+                <h5 class="mb-3">API Keys</h5>
+                {% for key, value in config.api_keys.items() %}
+                <div class="mb-3">
+                    <label for="{{ key }}" class="form-label">{{ key|capitalize }}</label>
+                    <input type="text" class="form-control" id="{{ key }}" name="api_keys[{{ key }}]" value="{{ value }}" placeholder="Enter your {{ key|capitalize }} API key">
+                </div>
+                {% endfor %}
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">Network Settings</h5>
+                <div class="mb-3">
+                    <label for="timeout" class="form-label">Timeout (seconds)</label>
+                    <input type="number" class="form-control" id="timeout" name="network[timeout]" value="{{ config.network.timeout }}" min="1" placeholder="Enter timeout in seconds">
+                </div>
+                <div class="mb-3">
+                    <label for="retries" class="form-label">Retries</label>
+                    <input type="number" class="form-control" id="retries" name="network[retries]" value="{{ config.network.retries }}" min="0" placeholder="Enter number of retries">
+                </div>
+                <!--
+                {% for key, value in config.items() %}
+                <div class="mb-3">
+                    <label for="{{ key }}" class="form-label">{{ key }}</label>
+                    <input type="text" class="form-control" id="{{ key }}" name="{{ key }}" value="{{ value }}">
+                </div>
+                {% endfor %}
+                -->
+                <button type="submit" class="btn btn-primary">Save Settings</button>
+            </form>
+            
+        </div>
+    </div>
+</main>
 {% endblock %}

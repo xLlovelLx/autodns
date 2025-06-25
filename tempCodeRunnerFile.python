@@ -1,23 +1,40 @@
-import requests
-import yaml
-from dns_enum.output_formats import save_as_json, save_as_csv, save_as_xml
+import socket
+import ssl
+import certifi
+import dns.message
+import dns.rdatatype
 
-api_key = "K7XyIBJU1jipnQRBQd97jVgP8qzaJTtH"
-url = f"https://api.securitytrails.com/v1/domain/oracle.com/subdomains?apikey={api_key}"
-results={}
-headers = {"accept": "application/json"}
-print(headers)
-response = requests.get(url, headers=headers)
-results["subdomains"]=response.json()["subdomains"]
-save_as_json(results,"results.json")
+def query_dot(domain, record_type="A", ip="94.140.14.14", hostname="dns.adguard-dns.com", port=853):
+    # Build DNS query
+    query = dns.message.make_query(domain, dns.rdatatype.from_text(record_type))
+    wire_data = query.to_wire()
 
+    # Prepare TLS context
+    context = ssl.create_default_context(cafile=certifi.where())
 
-"""def load_api_keys(config_path='config.yaml'):
-    with open(config_path, 'r') as file:
-        keys = yaml.safe_load(file)
-    return keys
+    try:
+        # Create secure connection
+        sock = socket.create_connection((ip, port), timeout=5)
+        tls = context.wrap_socket(sock, server_hostname=hostname)
 
-# Usage example
-api_keys = load_api_keys()['api_keys']
+        # Send query length and query
+        tls.send(len(wire_data).to_bytes(2, byteorder='big') + wire_data)
 
-print("SecurityTrails Key:", api_keys.get('securitytrails'))"""
+        # Read response length (2 bytes)
+        resp_len = int.from_bytes(tls.recv(2), byteorder='big')
+
+        # Read the actual DNS response
+        resp_data = tls.recv(resp_len)
+        response = dns.message.from_wire(resp_data)
+
+        # Print only the Answer section
+        for ans in response.answer:
+            print(ans)
+
+        tls.close()
+
+    except Exception as e:
+        print(f"[✘] Error: {e}")
+
+# Example usage
+query_dot("google.com", "A")

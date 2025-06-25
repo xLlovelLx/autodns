@@ -44,7 +44,7 @@ def active_enum(domain, output_file=False, verbose=False):
     """# Save results to file
     with open(output_file, "w") as f:
         f.write(str(results))
-    color_print(f"Active DNS probing results saved to {output_file}",ConsoleColors.OKGREEN)"""
-    
+    color_print(f"Active DNS probing results saved to {output_file}",ConsoleColors.OKGREEN)
+    """
     
     
