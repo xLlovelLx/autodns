@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<main class="col-md-10 ms-sm-auto px-md-5 py-4">
-    <div class="dashboard-header mb-4">
+
+    <div class="dashboard-header mb-4 {% if theme == 'dark' %}bg-dark{% endif %}">
         <h2><i class="fa-solid fa-gauge-high"></i> DNS Enumeration Dashboard</h2>
         <p class="text-secondary mb-0">Run, monitor, and visualize your DNS enumeration tasks.</p>
     </div>
@@ -17,8 +17,8 @@
     {% endwith %}
 
     <!-- Enumeration Form Card -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
+    <div class="card shadow-sm {% if theme == 'dark' %}bg-dark{% endif %}">
+        <div class="card-header {% if theme == 'dark' %}bg-dark{% else %}bg-primary text-white{% endif %}">
             <i class="fa fa-play-circle"></i> Start New Enumeration
         </div>
         <div class="card-body">
@@ -26,55 +26,86 @@
             <form id="enumForm" method="post">
                 <div class="row g-3">
                     <div class="col-md-4">
+                        <label for="inputType" class="form-label mb-3">Input Type</label>
+                        <select class="form-select" id="inputType" name="inputType">
+                            <option value="domain" selected>Domain</option>
+                            <option value="ptr">PTR (IP Range/CIDR)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4" id="domainInputDiv">
                         <label for="domain" class="form-label mb-3">Domain</label>
-                        <input type="text" class="form-control" name="domain" id="domain" required placeholder="example.com">
+                        <input type="text" class="form-control" name="domain" id="domain" placeholder="example.com">
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="passive" id="passive">
-                            <label class="form-check-label" for="passive">Passive</label>
-                        </div>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="active" id="active">
-                            <label class="form-check-label" for="active">Active</label>
-                        </div>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="brute" id="brute">
-                            <label class="form-check-label" for="brute">Brute-force</label>
-                        </div>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tld" id="tld">
-                            <label class="form-check-label" for="tld">TLD Exp.</label>
-                        </div>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="verbose" id="verbose">
-                            <label class="form-check-label" for="verbose">Verbose</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="wordlist" class="form-label">Wordlist (Brute-force, optional)</label>
-                        <input type="file" class="form-control" name="wordlist_file" id="wordlist_file">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="resolver_file" class="form-label">Resolver File (Brute-force, optional)</label>
-                        <input type="file" class="form-control" name="resolver_file" id="resolver_file">
+                    <div class="col-md-4" id="ptrInputDiv" style="display:none;">
+                        <label for="ptr" class="form-label mb-3">PTR (IP Range/CIDR)</label>
+                        <input type="text" class="form-control" name="ptr" id="ptr" placeholder="192.168.1.0/24">
                     </div>
                 </div>
-                <div class="mt-4">
-                    <button type="submit" name="submit_enum" class="btn btn-success"><i class="fa fa-bolt"></i> Start</button>
+                <div class="row g-3 mt-4" id="enumOptionsRow">
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="passive" id="passive">
+                                <label class="form-check-label" for="passive">Passive</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="active" id="active">
+                                <label class="form-check-label" for="active">Active</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="brute" id="brute">
+                                <label class="form-check-label" for="brute">Brute-force</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="doh" id="doh">
+                                <label class="form-check-label" for="doh">DoH</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="dot" id="dot">
+                                <label class="form-check-label" for="dot">DoT</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tld" id="tld">
+                                <label class="form-check-label" for="tld">TLD Exp.</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="verbose" id="verbose">
+                                <label class="form-check-label" for="verbose">graph</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="wordlist" class="form-label">Wordlist (Brute-force, optional)</label>
+                            <input type="file" class="form-control" name="wordlist_file" id="wordlist_file">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="resolver_file" class="form-label">Resolver File (Brute-force, optional)</label>
+                            <input type="file" class="form-control" name="resolver_file" id="resolver_file">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tld_file" class="form-label">TLD File (TLD Exp, optional)</label>
+                            <input type="file" class="form-control" name="resolver_file" id="resolver_file">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" name="submit_enum" class="btn btn-success"><i class="fa fa-bolt"></i> Start</button>
+                        <button type="button" id="stopBtn" class="btn btn-danger"><i class="fa fa-stop"></i> Stop</button>
+                    </div>
                 </div>
             </form>
             {% endif %} 
         </div>
-    </div>
+    
 
     <!--Active Tasks Card 
     {% if result %}
@@ -103,7 +134,7 @@
     </div>
     {% endif %} -->
 
-    <!-- History Card 
+    <!--History Card
     <div class="card shadow-sm mt-4">
         <div class="card-header bg-secondary text-white">
             <i class="fa-solid fa-clock-rotate-left"></i> Enumeration History
@@ -155,8 +186,8 @@
                 <div class="alert alert-info mb-0">No previous enumerations yet.</div>
             {% endif %}
         </div>
-    </div> 
-    -->
+    </div>-->
+    
     
     <!--Results Dashboard Card 
     <script>
@@ -187,15 +218,18 @@
 
     <!-- Results Display -->
     <div id="results">
-        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
-        <script src="{{ url_for('static', filename='main.js') }}"></script>
-        <div class="card shadow-sm mt-4">
-            <div class="card-header bg-secondary text-white">
-                <i class="fa-solid fa-list"></i> Enumeration Results
+        <div class="card shadow-sm mt-4 {% if theme == 'dark' %}bg-dark{% endif %}">
+            <div class="card-header d-flex justify-content-between align-items-center {% if theme == 'dark' %}bg-dark{% else %}bg-success text-white{% endif %}">
+                <div><i class="fa-solid fa-list"></i> Enumeration Results</div>
+                
+                <button id="exportBtn" class="btn btn-sm" title="Export Results" disabled>
+                    <i class="fa fa-download"></i> Export
+                </button>
             </div>
             <div class="card-body">
-                <div id="resultsContent" class="accordion" id="resultsAccordion">
+                <div id="resultsContent" class="accordion">
                     <!-- Results will be dynamically inserted here -->
+                     <p class="mb-0">No active enumeration tasks found. Start a new task to see results here.</p>
                 </div>
             </div>
         </div>
@@ -224,8 +258,9 @@
             </div>
         </div>
     </div>
-    {% endif %} -->
+    {% endif %}-->
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>        
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 
-</main>
 {% endblock %}

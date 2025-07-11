@@ -3,18 +3,18 @@ import eventlet.wsgi
 from flask import Flask, render_template, request,redirect, url_for, flash
 from flask_socketio import SocketIO,join_room, emit
 from werkzeug.utils import secure_filename
-from scripts.utils import validate_file_path
+from scripts.utils import validate_file_path, load_file_lines, save_results_to_file,stop_event
 import os
-import threading
 from core.passive import passive_enum
-from core.active import active_enum
+from core.active import active_enum_flask
 from core.brute import brute_force, brute_force_flask
+from dns_enum.advanced_dns_records import dns_over_https_flask, dns_over_tls_flask
 import json
 import asyncio
 from datetime import datetime
 from ruamel.yaml import YAML
-
-eventlet.monkey_patch()  # Patch standard library to use eventlet for async I/O
+from dns_enum.tld_expansion import  tld_expand_flask
+# eventlet.monkey_patch()  # Patch standard library to use eventlet for async I/O
 
 # Get the default paths for subdomains and resolvers
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +25,7 @@ HISTORY_FILE = os.path.join(BASE_DIR, "enumeration_history.json")
 CONFIG_FILE = os.path.join(BASE_DIR, "config.yaml")
 
 app = Flask(__name__)
-socketio = SocketIO(app,async_mode='threading')
+socketio = SocketIO(app,async_mode='threading')  # Use threading for async mode
 app.secret_key = 'secret'
 UPLOAD_FOLDER = 'data'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -118,17 +118,24 @@ def add_history_entry(entry):
     }
     return output,output.keys()"""
 
+
+@socketio.on('stop_enum')
+def handle_stop_enum():
+    stop_event.set()
+
 @socketio.on('start_enum')
 def handle_start_enum(params):
     history = load_history()
     # Ensure the request has a session ID
-    if not request.sid:
-        emit('enum_update', {'step': 'Error', 'result': 'Session ID not found.'})
-        return
-    sid = request.sid
-    join_room(sid)
+    # if not request.sid:
+        # emit('enum_update', {'step': 'Error', 'result': 'Session ID not found.'})
+        # return
+    # sid = request.sid
+    # join_room(sid)
     # Run enumeration in a background thread
-    domain = params.get('domain', '')
+    input_type = params.get('inputType', 'domain')
+    domain = params.get('domain', '').strip()
+    ptr = params.get('ptr', '').strip()
     passive = params.get('passive', False)
     active = params.get('active', False)
     brute = params.get('brute', False)
@@ -136,34 +143,48 @@ def handle_start_enum(params):
     wordlist_file = validate_file_path(params.get('wordlist_file'), DEFAULT_SUBDOMAINS)
     resolver_file = validate_file_path(params.get('resolver_file'), DEFAULT_RESOLVERS)
     tld = params.get('tld', False)
+    doh = params.get('doh', False)
+    dot = params.get('dot', False)
     
-    if not domain:
-        emit('enum_update', {'step': 'Error', 'result': 'Domain is required.'}, room=sid)
+    if not domain and not ptr:
+        emit('enum_update', {'step': 'Error', 'result': 'Domain/ptr is required.'})
         return
     output = {}
     try:
-        if passive:
-            output["Passive"] = passive_enum(domain, None, verbose, all_engines=True)
-            if sid:
-                socketio.emit('enum_update', {'step': 'Passive', 'result': output["Passive"]}, room=sid)
-        if active:
-            output["Active"] = active_enum(domain, None, verbose)
-            if sid:
-                socketio.emit('enum_update', {'step': 'Active', 'result': output["Active"]}, room=sid)
-        if brute:
-            if sid:
-                output["Brute-Force"] = brute_force_flask(domain, wordlist_file, resolver_file,sid)
-                
+        if input_type == 'ptr' and ptr:
+            from dns_enum.ptr_lookup import ptr_lookup_flask
+            output["PTR"] = ptr_lookup_flask(ptr, verbose)
+        else:
+            if passive:
+                output["Passive"] = passive_enum(domain, None, verbose, all_engines=True)
+                # if sid:
+                socketio.emit('enum_update', {'step': 'Passive', 'result': output["Passive"]})
+            if active:
+                output["Active"] = active_enum_flask(domain, None, verbose)
+                # if sid:
+                # socketio.emit('enum_update', {'step': 'Active', 'result': output["Active"]})
+            if brute:
+                # if sid:
+                output["Brute-Force"] = brute_force_flask(domain, wordlist_file, resolver_file)
+            if doh:
+                output["DoH"] = dns_over_https_flask(domain, output_file=None, verbose=verbose)
+                # socketio.emit('enum_update', {'step': 'DoH', 'result': output["DoH"]})
+            if dot:
+                output["DoT"] = dns_over_tls_flask(domain, output_file=None, verbose=verbose)
+                # socketio.emit('enum_update', {'step': 'DoT', 'result': output["DoT"]})
+            if tld:
+                output["TLD"] = tld_expand_flask(domain, tlds_path=DEFAULT_TLDS, verbose=verbose)
             
                
-        results_store[sid] = {
+        """results_store[] = {
             'domain': domain,
             'types': list(output.keys()),
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'result': output
-        }
+        }"""
+
         entry = {
-            "domain": domain,
+            "domain": ptr if input_type == 'ptr' else domain,
             "types": list(output.keys()),
             "result_key": os.urandom(8).hex(),
             "params": params,
@@ -177,10 +198,10 @@ def handle_start_enum(params):
         
             #socketio.emit('enum_message', {'message': f"Enumeration complete.{output}", 'category': "success"}, room=sid)
         
-        if sid:
-            socketio.emit('enum_update', {'step': 'Complete', 'result': output}, room=sid)
+        # if sid:
+        socketio.emit('enum_update', {'step': 'Complete', 'result': output})
     except Exception as e:
-        socketio.emit('enum_update', {'step': 'Error', 'result': str(e)}, room=sid)
+        socketio.emit('enum_update', {'step': 'Error', 'result': str(e)})
         
     
 
@@ -190,7 +211,7 @@ def index():
     config=load_config()
     result=None
     verbose_output = None
-    
+    theme = config.get("ui",{}).get("theme", "dark")  # Default to light theme if not set
     if request.method == 'POST':
         """if "submit_enum" in request.form:
             domain = request.form['domain']
@@ -278,7 +299,8 @@ def index():
         history=load_history(),
         result=result,
         config=config,
-        active_page='dashboard'
+        active_page='dashboard',
+        theme=theme
     )
     #return render_template('dashboard.html', result=result ,history=load_history())
     
@@ -319,6 +341,9 @@ def settings():
     config = load_config()  # Load the current configuration from the YAML file
 
     if request.method == 'POST':
+        theme = request.form.get("theme", {})
+        config['ui']['theme'] = theme  # Update the theme in the configuration
+        
         # Update API keys
         for key in config["api_keys"]:
             form_key = f"api_keys[{key}]"
@@ -338,13 +363,20 @@ def settings():
         save_config(config)  # Save the updated configuration to the YAML file
         flash("Settings updated successfully.", "success")
         return redirect(url_for('settings'))
-
+    
+    theme = config.get("ui", {}).get("theme", "dark")
     return render_template(
         'settings.html',
         config=config,
         active_page='settings',
+        theme=theme
         )
 
+@app.route('/history', methods=['GET'])
+def history():
+    history = load_history()
+    theme = load_config().get("ui", {}).get("theme", "dark")
+    return render_template('history.html', history=history, active_page='history', theme=theme)
 
 @app.route('/result/<key>', methods=['GET'])
 def results(key):

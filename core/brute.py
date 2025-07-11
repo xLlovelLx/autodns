@@ -4,12 +4,16 @@ import dns.asyncresolver
 import dns.resolver
 from flask_socketio import SocketIO,emit,join_room
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
+import threading
 import socketio
 from dns_enum.console_output import color_print, ConsoleColors
-from scripts.utils import get_dynamic_max_workers
+from scripts.utils import get_dynamic_max_workers, stop_event
+
 
 def query_subdomain(subdomain, resolver, verbose):
+    if stop_event.is_set():
+        return subdomain, []
+    
     if verbose:
         color_print(f"Querying {subdomain}...",ConsoleColors.OKBLUE)
     try:
@@ -23,6 +27,9 @@ def query_subdomain(subdomain, resolver, verbose):
     
     
 def check_subdomain(subdomain, domain, resolver_ip):
+    if stop_event.is_set():
+        return None
+    
     fqdn = f"{subdomain}.{domain}"
     resolver = dns.resolver.Resolver()
     resolver.nameservers = [resolver_ip]
@@ -32,7 +39,7 @@ def check_subdomain(subdomain, domain, resolver_ip):
     except Exception:
         return None
 
-def brute_force_flask(domain, wordlist_path, resolver_file_path,sid):
+def brute_force_flask(domain, wordlist_path, resolver_file_path):
     found = []
     with open(resolver_file_path, 'r') as f:
         RESOLVERS = [line.strip() for line in f if line.strip()]
@@ -40,21 +47,26 @@ def brute_force_flask(domain, wordlist_path, resolver_file_path,sid):
         SUBDOMAINS = [line.strip() for line in f if line.strip()]
         
     max_workers = get_dynamic_max_workers(len(SUBDOMAINS))
-    
+    stop_event.clear()
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = []
         for i, sub in enumerate(SUBDOMAINS):
+            if stop_event.is_set():
+                break
             resolver_ip = RESOLVERS[i % len(RESOLVERS)]
             futures.append(executor.submit(check_subdomain, sub, domain, resolver_ip))
         for future in futures:
+            if stop_event.is_set():
+                break
             result = future.result()
             if result:
                 found.append(result)
                 print(f"Found subdomain: {result}")
-                if sid:
-                    socketio.emit('enum_update', {'step' : 'Brute-Force','result': result},room=sid)
-    if sid:
-        socketio.emit('enum_complete', {'step':'Brute-Force', 'result': result}, room=sid)
+                # if socketio:
+                emit('enum_update', {'step' : 'Brute-Force','result': f"found {result}" })
+    # if sid:
+    emit('enum_complete', {'step':'Brute-Force', 'result': f"found {found}" })
+
     return found
 
 
@@ -92,10 +104,13 @@ def brute_force(domain, wordlist_path, resolver_file_path, output_file, verbose)
     #tasks = []
     found = {}
     max_workers = get_dynamic_max_workers(len(words))
-    
+    stop_event.clear()
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [executor.submit(query_subdomain, f"{word}.{domain}", resolver, verbose) for word in words]
         for future in as_completed(futures):
+            if stop_event.is_set():
+                color_print("Brute-force enumeration stopped by user.", ConsoleColors.WARNING)
+                break
             sub, ips = future.result()
             if ips:
                 found[sub] = ips

@@ -1,8 +1,51 @@
-<!-- filepath: c:\Users\RAMY\vscodes\pythons\autodns\templates\settings.html -->
+
 {% extends "base.html" %}
+{% macro render_field(key, value, prefix='', show_label=true) %}
+    {% if prefix %}
+        {% set field_name = prefix ~ '[' ~ key ~ ']' %}
+    {% else %}
+        {% set field_name = key %}
+    {% endif %}
+    {% if value is mapping %}
+        <div class="ms-3 border-start ps-3 mb-3">
+            {% if show_label %}
+                <label class="form-label fw-bold">{{ key|capitalize }}</label>
+            {% endif %}
+            {% for subkey, subval in value.items() %}
+                {{ render_field(subkey, subval, field_name, true) }}
+            {% endfor %}
+        </div>
+    {% elif value is sequence and value is not string %}
+        <div class="mb-3">
+            <label class="form-label">{{ key|capitalize }}</label>
+            {% for item in value %}
+                <input type="text" class="form-control mb-1" id="{{ field_name }}_{{ loop.index0 }}" name="{{ field_name }}[{{ loop.index0 }}]" value="{{ item }}">
+            {% endfor %}
+            {% if value|length == 0 %}
+                <input type="text" class="form-control mb-1" id="{{ field_name }}_0" name="{{ field_name }}[0]" value="">
+            {% endif %}
+        </div>
+    {% elif value is boolean or value|string|lower in ['true', 'false'] %}
+        <div class="mb-3">
+            <label for="{{ field_name }}" class="form-label">{{ key|capitalize }}</label>
+            <input type="checkbox" class="form-check-input" id="{{ field_name }}" name="{{ field_name }}" {% if value or value|string|lower == 'true' %}checked{% endif %}>
+        </div>
+    {% elif value is number %}
+        <div class="mb-3">
+            <label for="{{ field_name }}" class="form-label">{{ key|capitalize }}</label>
+            <input type="number" class="form-control" id="{{ field_name }}" name="{{ field_name }}" value="{{ value }}">
+        </div>
+    {% else %}
+        <div class="mb-3">
+            <label for="{{ field_name }}" class="form-label">{{ key|capitalize }}</label>
+            <input type="text" class="form-control" id="{{ field_name }}" name="{{ field_name }}" value="{{ value }}">
+        </div>
+    {% endif %}
+{% endmacro %}
+
 {% block content %}
-<main class="col-md-10 ms-sm-auto px-md-5 py-4">
-    <div class="dashboard-header mb-4">
+
+    <div class="dashboard-header mb-4 {% if theme == 'dark' %}bg-dark{% endif %}">
         <h2><i class="fa-solid fa-cog"></i> Settings</h2>
         <p class="text-secondary mb-0">Configure your AutoDNS settings.</p>
     </div>
@@ -17,13 +60,36 @@
       {% endif %}
     {% endwith %}
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
+    <div class="card shadow-sm {% if theme == 'dark' %}bg-dark{% endif %}">
+        <div class="card-header {% if theme == 'dark' %}bg-dark{% else %}bg-primary text-white{% endif %}">
             <i class="fa fa-cogs"></i> Update Configuration
         </div>
         <div class="card-body">
             <form method="post" action="{{ url_for('settings') }}">
-                <h5 class="mb-3">API Keys</h5>
+
+                {% for key, value in config.items() %}
+                    {{ render_field(key, value) }}
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Save Settings</button>
+            </form>
+            <!--{% if value is mapping %}
+                        <h5 class="mb-3">{{ key|capitalize }}</h5>
+                        {% for subkey, subval in value.items() %}
+                            {% if subval is mapping %}
+                                <h6 class="mb-2 ms-3">{{ subkey|capitalize }}</h6>
+                                <div class="ms-3">
+                                    {% for subsubkey, subsubval in subval.items() %}
+                                        {{ render_field(subsubkey, subsubval, key ~ '[' ~ subkey ~ '][') }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ render_field(subkey, subval, key ~ '[') }}
+                            {% endif %}
+                        {% endfor %}
+                        <hr class="my-4">
+                    {% else %}-->
+                    <!--{% endif %}-->
+                <!--<h5 class="mb-3">API Keys</h5>
                 {% for key, value in config.api_keys.items() %}
                 <div class="mb-3">
                     <label for="{{ key }}" class="form-label">{{ key|capitalize }}</label>
@@ -42,7 +108,7 @@
                     <label for="retries" class="form-label">Retries</label>
                     <input type="number" class="form-control" id="retries" name="network[retries]" value="{{ config.network.retries }}" min="0" placeholder="Enter number of retries">
                 </div>
-                <!--
+                
                 {% for key, value in config.items() %}
                 <div class="mb-3">
                     <label for="{{ key }}" class="form-label">{{ key }}</label>
@@ -50,10 +116,7 @@
                 </div>
                 {% endfor %}
                 -->
-                <button type="submit" class="btn btn-primary">Save Settings</button>
-            </form>
-            
         </div>
     </div>
-</main>
+
 {% endblock %}

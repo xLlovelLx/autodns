@@ -36,9 +36,9 @@ dns_providers:
     dnsimple: "https://dns.dnsimple.com/resolve"
     adguard: "https://dns.adguard.com/dns-query"
     cloudflare: "https://cloudflare-dns.com/dns-query"
-    google: 
-      - "https://dns.google/resolve"
-      - "https://dns.google/dns-query"
+    google:
+    - "https://dns.google/resolve"
+    - "https://dns.google/dns-query"
     quad9: "https://dns.quad9.net/dns-query"
     cleanbrowsing: "https://doh.cleanbrowsing.org/doh/family-filter/"
     dnswatch: "https://dns.watch/dns-query"
@@ -51,61 +51,61 @@ dns_providers:
 
   address:
     opendns:
-      ip: 
-        - "208.67.222.222"
-        - "208.67.220.220"
+      ip:
+      - "208.67.222.222"
+      - "208.67.220.220"
       hostname: "dns.opendns.com"
     dnsimple:
       ip: [] # Not public
       hostname: []
     adguard:
-      ip: 
-        - "94.140.14.14"
-        - "94.140.15.15"
+      ip:
+      - "94.140.14.14"
+      - "94.140.15.15"
       hostname: "dns.adguard-dns.com"
     cloudflare:
       ip:
-        - "1.1.1.1"
-        - "1.0.0.1"
+      - "1.1.1.1"
+      - "1.0.0.1"
       hostname: "cloudflare-dns.com"
     google:
       ip:
-        - "8.8.8.8"
-        - "8.8.4.4"
+      - "8.8.8.8"
+      - "8.8.4.4"
       hostname: "dns.google"
     quad9:
       ip:
-        - "9.9.9.9"
-        - "149.112.112.112"
+      - "9.9.9.9"
+      - "149.112.112.112"
       hostname: "dns.quad9.net"
     cleanbrowsing:
       ip:
-        - "185.228.168.168"
-        - "185.228.169.168"
+      - "185.228.168.168"
+      - "185.228.169.168"
       hostname: "cleanbrowsing.org"
 
-    dnswatch: 
+    dnswatch:
       ip:
-        - "84.200.69.80"
-        - "84.200.70.40"
-      hostname:  "dns.watch"
+      - "84.200.69.80"
+      - "84.200.70.40"
+      hostname: "dns.watch"
     dnscrypt:  # Not public
       ip: []
       hostname: []
-    dnswarden: 
-      ip: 
-        - "116.203.70.156"
-        - "116.203.35.255"
+    dnswarden:
+      ip:
+      - "116.203.70.156"
+      - "116.203.35.255"
       hostname: "dnswarden.com"
-    dnsforge: 
-      ip: 
-        - "176.9.93.198"
-        - "176.9.1.117"
-      hostname : "dnsforge.net"
-    dnsprivacy: 
-      ip: 
-        - "145.100.185.15"
-        - "145.100.185.16"
+    dnsforge:
+      ip:
+      - "176.9.93.198"
+      - "176.9.1.117"
+      hostname: "dnsforge.net"
+    dnsprivacy:
+      ip:
+      - "145.100.185.15"
+      - "145.100.185.16"
       hostname: "dnsprivacy.net"
     dnscrypt_proxy:  # Not public
       ip: []
@@ -146,7 +146,8 @@ features:
   proxy_support: false  # Enable proxy support for network requests
 # User interface settings
 ui:
-  theme: "dark"  # Options: light, dark
+  theme: "light"   # Options: light, dark
+
 #DNS Types
 dns_types:
   a: true
@@ -156,7 +157,7 @@ dns_types:
   ns: true
   txt: false
   soa: false
-  srv: false 
+  srv: false
   ptr: false
   spf: false
   caa: false
@@ -206,7 +207,7 @@ dns_types:
   mailb: false
   nimloc: false
   atma: false
-  
+
 
 # Advanced settings
 advanced:
@@ -215,7 +216,6 @@ advanced:
   dns_retries: 1  # Number of retries for DNS queries
   log_level: "DEBUG"  # Log level for detailed debugging information
   enable_debug_mode: false  # Enable debug mode for additional logging and output
-  
 # Database settings (if applicable)
 database:
   type: "sqlite"  # Options: sqlite, postgresql, mysql

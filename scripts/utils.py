@@ -1,4 +1,8 @@
 import os
+import threading
+
+global stop_event 
+stop_event = threading.Event()
 
 def validate_file_path(file_path, default_path):
     """
@@ -40,3 +44,4 @@ def get_dynamic_max_workers(num_tasks):
     cpu_count = os.cpu_count() or 4
     max_threads = min(max(cpu_count * 10, 10), 200)  # between 10 and 200
     return min(max_threads, num_tasks)
+

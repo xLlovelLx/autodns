@@ -1,0 +1,66 @@
+{%extends "base.html"%}
+{% block content %}
+<!--History Card-->
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-secondary text-white">
+            <i class="fa-solid fa-clock-rotate-left"></i> Enumeration History
+        </div>
+        <div class="card-body">
+            {% if history and history|length > 0 %}
+            <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Domain</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                        <th>Result</th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in history %}
+                    <tr>
+                        <td>{{ item.timestamp }}</td>
+                        <td>{{ item.domain }}</td>
+                        <td>
+                            {% for t in item.types %}
+                                <span class="badge bg-info text-dark">{{ t }}</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            
+                            <form action="{{ url_for('delete_history', result_key=item.result_key) }}" method="post" style="display:inline;">
+                              <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this entry?');">Delete</button>
+                            </form>
+                            <form action="{{ url_for('redo_history', result_key=item.result_key) }}" method="post" style="display:inline;">
+                              <button type="submit" class="btn btn-sm btn-outline-warning">Redo</button>
+                            </form>
+                          </td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('results', key=item.result_key) }}">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% else %}
+                <div class="alert alert-info mb-0">No previous enumerations yet.</div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>    
+        // Add any specific JavaScript for this page here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example: Initialize tooltips or other JS components if needed
+            console.log("History page loaded");
+        });
+    </script>
+{% endblock %}
