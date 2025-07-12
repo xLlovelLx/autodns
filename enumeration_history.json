@@ -2,6 +2,1609 @@
   {
     "domain": "google.com",
     "types": [
+      "Active",
+      "DoH",
+      "DoT",
+      "Brute-Force"
+    ],
+    "result_key": "71a5714ef1e9ffcd",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": true,
+      "doh": true,
+      "dot": true,
+      "tld": false,
+      "verbose": false
+    },
+    "timestamp": "2025-07-12 11:18:04",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\""
+        ],
+        "NS": [
+          "ns1.google.com.",
+          "ns3.google.com.",
+          "ns2.google.com.",
+          "ns4.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      },
+      "DoH": {
+        "opendns": {
+          "A": [
+            "142.250.200.206"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:80c::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "dnsimple": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "adguard": {
+          "A": [
+            "142.250.180.174"
+          ],
+          "AAAA": [
+            "2a00:1450:4002:403::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns4.google.com.",
+            "ns3.google.com.",
+            "ns1.google.com.",
+            "ns2.google.com."
+          ]
+        },
+        "cloudflare": {
+          "A": [
+            "142.250.200.78"
+          ],
+          "AAAA": [
+            "2a00:1450:4003:80d::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns3.google.com.",
+            "ns4.google.com.",
+            "ns1.google.com.",
+            "ns2.google.com."
+          ]
+        },
+        "google": {
+          "A": [
+            "142.251.37.46"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:810::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns3.google.com.",
+            "ns2.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "quad9": {
+          "A": [
+            "216.58.212.110"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:813::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns2.google.com.",
+            "ns1.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "cleanbrowsing": {
+          "A": [
+            "142.251.37.46"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:810::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns3.google.com.",
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "dnswatch": {},
+        "dnscrypt": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnswarden": {},
+        "dnsforge": {
+          "A": [
+            "172.217.18.14"
+          ],
+          "AAAA": [
+            "2a00:1450:4001:80b::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns3.google.com.",
+            "ns2.google.com.",
+            "ns4.google.com.",
+            "ns1.google.com."
+          ]
+        },
+        "dnsprivacy": {},
+        "dnscrypt_proxy": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnsfilter": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        }
+      },
+      "DoT": {
+        "opendns": {
+          "A": [
+            "142.250.200.206"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:80c::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "dnsimple": {},
+        "adguard": {
+          "A": [],
+          "AAAA": [
+            "2a00:1450:4002:403::200e"
+          ],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "cloudflare": {
+          "A": [
+            "142.250.200.78"
+          ],
+          "AAAA": [
+            "2a00:1450:4003:80d::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com.",
+            "ns2.google.com."
+          ]
+        },
+        "google": {
+          "A": [
+            "142.251.37.46"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:810::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns3.google.com.",
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "quad9": {
+          "A": [
+            "172.217.171.238"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:800::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns4.google.com.",
+            "ns3.google.com.",
+            "ns2.google.com."
+          ]
+        },
+        "cleanbrowsing": {
+          "A": [
+            "172.217.20.174"
+          ],
+          "AAAA": [
+            "2a00:1450:4007:80c::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns3.google.com.",
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "dnswatch": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnscrypt": {},
+        "dnswarden": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnsforge": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnsprivacy": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnscrypt_proxy": {}
+      },
+      "Brute-Force": [
+        "www.google.com",
+        "mail.google.com",
+        "admin.google.com",
+        "api.google.com"
+      ]
+    }
+  },
+  {
+    "domain": "google.com,example.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "ce5adcd31341fdc2",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com,example.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false
+    },
+    "timestamp": "2025-07-12 11:00:31",
+    "result": {
+      "Active": null
+    }
+  },
+  {
+    "domain": "google.com,example.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "207c59ccbe27839a",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com,example.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false
+    },
+    "timestamp": "2025-07-12 10:59:44",
+    "result": {
+      "Active": null
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "c3a6d05536935355",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:48:10",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.200.206"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80f::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\""
+        ],
+        "NS": [
+          "ns1.google.com.",
+          "ns4.google.com.",
+          "ns3.google.com.",
+          "ns2.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active",
+      "DoH",
+      "DoT",
+      "TLD",
+      "Brute-Force"
+    ],
+    "result_key": "7006a47e315800c8",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": true,
+      "doh": true,
+      "dot": true,
+      "tld": true,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:45:51",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.200.206"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\""
+        ],
+        "NS": [
+          "ns2.google.com.",
+          "ns3.google.com.",
+          "ns1.google.com.",
+          "ns4.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      },
+      "DoH": {
+        "opendns": {
+          "A": [
+            "142.250.200.206"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:80c::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "dnsimple": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "adguard": {
+          "A": [
+            "142.250.180.174"
+          ],
+          "AAAA": [
+            "2a00:1450:4002:403::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns3.google.com.",
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "cloudflare": {
+          "A": [
+            "142.250.200.78"
+          ],
+          "AAAA": [
+            "2a00:1450:4003:80d::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns2.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com.",
+            "ns1.google.com."
+          ]
+        },
+        "google": {
+          "A": [
+            "142.250.200.206"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:80c::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "quad9": {
+          "A": [
+            "216.58.212.110"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:80b::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns2.google.com.",
+            "ns1.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "cleanbrowsing": {
+          "A": [
+            "142.251.37.46"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:810::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns3.google.com.",
+            "ns2.google.com.",
+            "ns1.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "dnswatch": {},
+        "dnscrypt": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnswarden": {},
+        "dnsforge": {
+          "A": [
+            "142.250.185.206"
+          ],
+          "AAAA": [
+            "2a00:1450:4001:80b::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10"
+          ],
+          "NS": [
+            "ns2.google.com.",
+            "ns1.google.com.",
+            "ns4.google.com.",
+            "ns3.google.com."
+          ]
+        },
+        "dnsprivacy": {},
+        "dnscrypt_proxy": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnsfilter": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        }
+      },
+      "DoT": {
+        "opendns": {
+          "A": [
+            "142.250.200.206"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:80c::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "dnsimple": {},
+        "adguard": {
+          "A": [
+            "142.250.180.174"
+          ],
+          "AAAA": [
+            "2a00:1450:4002:403::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns2.google.com.",
+            "ns4.google.com.",
+            "ns3.google.com."
+          ]
+        },
+        "cloudflare": {
+          "A": [
+            "142.250.200.78"
+          ],
+          "AAAA": [
+            "2a00:1450:4003:80c::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns2.google.com.",
+            "ns3.google.com.",
+            "ns4.google.com.",
+            "ns1.google.com."
+          ]
+        },
+        "google": {
+          "A": [
+            "142.251.37.46"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:80c::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns3.google.com.",
+            "ns4.google.com.",
+            "ns1.google.com.",
+            "ns2.google.com."
+          ]
+        },
+        "quad9": {
+          "A": [
+            "172.217.171.238"
+          ],
+          "AAAA": [
+            "2a00:1450:4006:80b::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns1.google.com.",
+            "ns4.google.com.",
+            "ns3.google.com.",
+            "ns2.google.com."
+          ]
+        },
+        "cleanbrowsing": {
+          "A": [
+            "172.217.20.174"
+          ],
+          "AAAA": [
+            "2a00:1450:4007:80c::200e"
+          ],
+          "CNAME": [],
+          "MX": [
+            "10 smtp.google.com."
+          ],
+          "NS": [
+            "ns3.google.com.",
+            "ns2.google.com.",
+            "ns1.google.com.",
+            "ns4.google.com."
+          ]
+        },
+        "dnswatch": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnscrypt": {},
+        "dnswarden": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnsforge": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnsprivacy": {
+          "A": [],
+          "AAAA": [],
+          "CNAME": [],
+          "MX": [],
+          "NS": []
+        },
+        "dnscrypt_proxy": {}
+      },
+      "TLD": [
+        {
+          "domain": "google.com"
+        },
+        {
+          "domain": "google.org"
+        },
+        {
+          "domain": "google.net"
+        },
+        {
+          "domain": "google.co"
+        },
+        {
+          "domain": "google.io"
+        },
+        {
+          "domain": "google.info"
+        }
+      ],
+      "Brute-Force": [
+        "www.google.com",
+        "mail.google.com",
+        "admin.google.com",
+        "api.google.com"
+      ]
+    }
+  },
+  {
+    "domain": "1.1.1.1",
+    "types": [
+      "PTR"
+    ],
+    "result_key": "f0a375454d01bc24",
+    "params": {
+      "inputType": "ptr",
+      "domain": "",
+      "ptr": "1.1.1.1",
+      "passive": false,
+      "active": false,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:41:33",
+    "result": {
+      "PTR": {
+        "1.1.1.1": [
+          "one.one.one.one."
+        ]
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "5adc9c3b1c03d4c3",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:38:30",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80f::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\""
+        ],
+        "NS": [
+          "ns3.google.com.",
+          "ns2.google.com.",
+          "ns1.google.com.",
+          "ns4.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "4c78fc7be0c96082",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:36:02",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"v=spf1 include:_spf.google.com ~all\""
+        ],
+        "NS": [
+          "ns1.google.com.",
+          "ns4.google.com.",
+          "ns3.google.com.",
+          "ns2.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "4be63b2bfda6ece0",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:34:53",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.200.206"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\""
+        ],
+        "NS": [
+          "ns2.google.com.",
+          "ns3.google.com.",
+          "ns4.google.com.",
+          "ns1.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "56b570037c8adfa2",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:33:06",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.200.206"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\""
+        ],
+        "NS": [
+          "ns4.google.com.",
+          "ns3.google.com.",
+          "ns1.google.com.",
+          "ns2.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "729af4142d0b7258",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:06:20",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\""
+        ],
+        "NS": [
+          "ns1.google.com.",
+          "ns2.google.com.",
+          "ns3.google.com.",
+          "ns4.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "da51bc66b6b81d9f",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:04:17",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\""
+        ],
+        "NS": [
+          "ns4.google.com.",
+          "ns1.google.com.",
+          "ns3.google.com.",
+          "ns2.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "2fd46026abc770e5",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:02:25",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80f::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\""
+        ],
+        "NS": [
+          "ns2.google.com.",
+          "ns3.google.com.",
+          "ns4.google.com.",
+          "ns1.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "f49be60d6f3c16ef",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 08:00:40",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\""
+        ],
+        "NS": [
+          "ns1.google.com.",
+          "ns4.google.com.",
+          "ns2.google.com.",
+          "ns3.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "8cfb60cccf0106c9",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 07:54:48",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\""
+        ],
+        "NS": [
+          "ns2.google.com.",
+          "ns3.google.com.",
+          "ns4.google.com.",
+          "ns1.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "28a5b8e9405943c5",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 07:52:29",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\""
+        ],
+        "NS": [
+          "ns2.google.com.",
+          "ns4.google.com.",
+          "ns1.google.com.",
+          "ns3.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "a247ff8893811e42",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 07:51:45",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\""
+        ],
+        "NS": [
+          "ns4.google.com.",
+          "ns3.google.com.",
+          "ns2.google.com.",
+          "ns1.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
+      "Active"
+    ],
+    "result_key": "904163366f0fa654",
+    "params": {
+      "inputType": "domain",
+      "domain": "google.com",
+      "ptr": "",
+      "passive": false,
+      "active": true,
+      "brute": false,
+      "doh": false,
+      "dot": false,
+      "tld": false,
+      "verbose": false,
+      "graph": false
+    },
+    "timestamp": "2025-07-12 07:49:27",
+    "result": {
+      "Active": {
+        "A": [
+          "142.250.201.46"
+        ],
+        "AAAA": [
+          "2a00:1450:4006:80c::200e"
+        ],
+        "MX": [
+          "10 smtp.google.com."
+        ],
+        "TXT": [
+          "\"globalsign-smime-dv=CDYX+XFHUw2wml6/Gb8+59BsH31KzUr6c1l2BPvqKX8=\"",
+          "\"docusign=05958488-4752-4ef2-95eb-aa7ba8a3bd0e\"",
+          "\"cisco-ci-domain-verification=47c38bc8c4b74b7233e9053220c1bbe76bcc1cd33c7acf7acd36cd6a5332004b\"",
+          "\"MS=E4A68B9AB2BB9670BCE15412F62916164C0B20BB\"",
+          "\"v=spf1 include:_spf.google.com ~all\"",
+          "\"google-site-verification=TV9-DBe4R80X4v0M4U_bd_J9cpOJM0nikft0jAgjmsQ\"",
+          "\"facebook-domain-verification=22rm551cu4k0ab0bxsw536tlds4h95\"",
+          "\"apple-domain-verification=30afIBcvSuDV2PLX\"",
+          "\"docusign=1b0a6754-49b1-4db5-8540-d2c12664b289\"",
+          "\"google-site-verification=wD8N7i1JTNTkezJ49swvWW48f8_9xveREV4oB-0Hf5o\"",
+          "\"google-site-verification=4ibFUgB-wXLQ_S7vsXVomSTVamuOXBiVAzpR5IZ87D0\"",
+          "\"onetrust-domain-verification=de01ed21f2fa4d8781cbc3ffb89cf4ef\""
+        ],
+        "NS": [
+          "ns3.google.com.",
+          "ns2.google.com.",
+          "ns1.google.com.",
+          "ns4.google.com."
+        ],
+        "SPF": [],
+        "NSEC": [],
+        "NSEC3": [],
+        "DS": [],
+        "DNSKEY": [],
+        "RRSIG": []
+      }
+    }
+  },
+  {
+    "domain": "google.com",
+    "types": [
       "Active"
     ],
     "result_key": "7b4212790bbeed1e",

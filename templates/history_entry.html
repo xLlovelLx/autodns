@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard-header mb-4 {% if theme == 'dark' %}bg-dark{% endif %}">
+    <h2><i class="fa-solid fa-clock-rotate-left"></i> History Entry Details</h2>
+    <p class="text-secondary mb-0">Details for domain: {{ entry.domain }}</p>
+    <nav class="mt-2">
+        <a href="{{ url_for('history') }}" class="btn btn-outline-primary btn-sm me-2"><i class="fa fa-arrow-left"></i> Back to History</a>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm"><i class="fa fa-home"></i> Dashboard</a>
+        <a href="{{ url_for('graph_image') }}?result_key={{ entry.result_key }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">Graph</a>
+        <form action="{{ url_for('delete_history', result_key=entry.result_key) }}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-sm ms-2 btn-outline-danger" onclick="return confirm('Delete this entry?');">Delete</button>
+        </form>
+    </nav>
+</div>
+
+<div class="card shadow-sm {% if theme == 'dark' %}bg-dark{% endif %} mb-4">
+    <div class="card-header {% if theme == 'dark' %}bg-dark{% else %}bg-primary text-white{% endif %}">
+        <i class="fa fa-info-circle"></i> Entry Information
+    </div>
+    <div class="card-body">
+        <p><strong>Domain:</strong> {{ entry.domain }}</p>
+        <p><strong>Timestamp:</strong> {{ entry.timestamp }}</p>
+        <p><strong>Types:</strong> 
+            {% for t in entry.types %}
+                <span class="badge bg-info text-dark">{{ t }}</span>
+            {% endfor %}
+        </p>
+    </div>
+</div>
+
+<div class="card shadow-sm {% if theme == 'dark' %}bg-dark{% endif %} mb-4">
+    <div class="card-header {% if theme == 'dark' %}bg-dark{% else %}bg-secondary text-white{% endif %}">
+        <i class="fa fa-cogs"></i> Parameters
+    </div>
+    <div class="card-body">
+        <pre>{{ entry.params | tojson(indent=2) }}</pre>
+    </div>
+</div>
+
+<div class="card shadow-sm {% if theme == 'dark' %}bg-dark{% endif %}">
+    <div class="card-header {% if theme == 'dark' %}bg-dark{% else %}bg-success text-white{% endif %}">
+        <i class="fa fa-list"></i> Result
+        <a href="{{ url_for('graph_image') }}?result_key={{ entry.result_key }}" target="_blank" class="btn btn-outline-info btn-sm ms-2">Graph</a>
+    </div>
+    <div class="card-body">
+        <pre>{{ entry.result | tojson(indent=2) }}</pre>
+    </div>
+</div>
+
+{% endblock %}

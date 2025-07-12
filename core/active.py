@@ -51,7 +51,7 @@ def active_enum(domain, output_file=False, verbose=False):
 def active_enum_flask(domain, output_file=None, verbose=False):
     """Perform active DNS probing for a domain in Flask context.
     """
-    record_types = ["A", "AAAA", "MX", "TXT", "NS"]
+    record_types = ["A", "AAAA","CNAME","MX", "TXT", "NS"]
     results = {}
     
     stop_event.clear()

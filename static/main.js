@@ -15,6 +15,17 @@
             document.getElementById('enumForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 let inputType = document.getElementById('inputType').value;
+
+                // Save checkbox states before enumeration
+                const checkboxIds = ['passive', 'active', 'brute', 'doh', 'dot', 'tld', 'verbose', 'graph'];
+                const checkboxStates = {};
+                checkboxIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        checkboxStates[id] = el.checked;
+                    }
+                });
+
                 // Gather form data
                 document.getElementById('resultsContent').innerHTML = '';
                 let params = {
@@ -22,16 +33,18 @@
                     domain: inputType === 'domain' ? document.getElementById('domain').value.trim() : '',
                     ptr: inputType === 'ptr' ? document.getElementById('ptr').value.trim() : '',
 
-                    passive: document.getElementById('passive').checked,
-                    active: document.getElementById('active').checked,
-                    brute: document.getElementById('brute').checked,
-                    doh: document.getElementById('doh').checked,
-                    dot: document.getElementById('dot').checked,
-                    tld: document.getElementById('tld').checked,
-                    verbose: document.getElementById('verbose').checked,
+                    passive: checkboxStates['passive'],
+                    active: checkboxStates['active'],
+                    brute: checkboxStates['brute'],
+                    doh: checkboxStates['doh'],
+                    dot: checkboxStates['dot'],
+                    tld: checkboxStates['tld'],
+                    verbose: checkboxStates['verbose'],
+                    graph: checkboxStates['graph'],
 
                     // File uploads are not sent via socket.io directly; handle separately if needed
                 };
+            
                 //document.getElementById('results').innerHTML = "<b>Enumeration started...</b>";
                 if ((inputType === 'domain' && params.domain) || (inputType === 'ptr' && params.ptr)) {
                     // Emit the enumeration request
@@ -88,9 +101,12 @@
                 }
             });
 
+            let latestCompleteResults = null;
+
             socket.on('enum_complete', function(data) {
                 let resultsDiv = document.getElementById('resultsContent');
                 const results = data.result;
+                latestCompleteResults = results;
 
                 // Clear previous results (including enum_update results)
                 resultsDiv.innerHTML = '';
@@ -124,9 +140,41 @@
                 } else {
                     html = `<pre>${JSON.stringify(results, null, 2)}</pre>`;
                 }
-
+                
                 resultsDiv.innerHTML = html;
+                alert("Enumeration completed successfully!");
+                // Enable export button on completion
+                const exportBtn = document.getElementById('exportBtn');
+                if (exportBtn) {
+                    exportBtn.disabled = false;
+                }
+                // Restore checkbox states after completion
+                const checkboxIds = ['passive', 'active', 'brute', 'doh', 'dot', 'tld', 'verbose', 'graph'];
+                checkboxIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && checkboxStates && checkboxStates.hasOwnProperty(id)) {
+                        el.checked = checkboxStates[id];
+                    }
+                });
             });
+
+            // Export button click handler
+            const exportBtn = document.getElementById('exportBtn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', function() {
+                    if (!latestCompleteResults) {
+                        alert('No results to export.');
+                        return;
+                    }
+                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(latestCompleteResults, null, 2));
+                    const downloadAnchorNode = document.createElement('a');
+                    downloadAnchorNode.setAttribute("href", dataStr);
+                    downloadAnchorNode.setAttribute("download", "enumeration_results.json");
+                    document.body.appendChild(downloadAnchorNode); // required for firefox
+                    downloadAnchorNode.click();
+                    downloadAnchorNode.remove();
+                });
+            }
             socket.on('enum_message', function(data) {
                 // Show the message to the user, e.g.:
                 alert(data.message);
@@ -135,4 +183,5 @@
             
             document.getElementById('stopBtn').addEventListener('click', function() {
                 socket.emit('stop_enum');
+                alert('Enumeration stopped by the user');
             });

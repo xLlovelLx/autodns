@@ -6,9 +6,12 @@
             <i class="fa-solid fa-clock-rotate-left"></i> Enumeration History
         </div>
         <div class="card-body">
+            <div class="mb-3">
+                <input type="text" id="filterInput" class="form-control" placeholder="Filter by domain or type...">
+            </div>
             {% if history and history|length > 0 %}
             <div class="table-responsive">
-            <table class="table table-bordered table-striped align-middle">
+            <table class="table table-bordered table-striped align-middle" id="historyTable">
                 <thead class="table-light">
                     <tr>
                         <th>Timestamp</th>
@@ -34,14 +37,14 @@
                             <form action="{{ url_for('delete_history', result_key=item.result_key) }}" method="post" style="display:inline;">
                               <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this entry?');">Delete</button>
                             </form>
-                            <form action="{{ url_for('redo_history', result_key=item.result_key) }}" method="post" style="display:inline;">
-                              <button type="submit" class="btn btn-sm btn-outline-warning">Redo</button>
+                            <form action="{{ url_for('export_history', result_key=item.result_key) }}" method="get" style="display:inline;">
+                              <button type="submit" id="exportBtn" class="btn btn-sm">
+                                <i class="fa fa-download"></i> Export </button>
                             </form>
                           </td>
                         <td>
-                            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('results', key=item.result_key) }}">
-                                View
-                            </a>
+                            <a href="{{ url_for('view_history_entry', result_key=item.result_key) }}" class="btn btn-sm btn-outline-primary">View</a>
+                            <a href="{{ url_for('graph_image') }}?result_key={{ item.result_key }}" target="_blank" class="btn btn-sm btn-outline-info ms-1">Graph</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -53,6 +56,24 @@
             {% endif %}
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterInput = document.getElementById('filterInput');
+            filterInput.addEventListener('input', function() {
+                const filter = filterInput.value.toLowerCase();
+                const rows = document.querySelectorAll('#historyTable tbody tr');
+                rows.forEach(row => {
+                    const domain = row.cells[1].textContent.toLowerCase();
+                    const types = row.cells[2].textContent.toLowerCase();
+                    if (domain.includes(filter) || types.includes(filter)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block scripts %}

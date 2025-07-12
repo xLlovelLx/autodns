@@ -73,14 +73,13 @@ def tld_expand_flask(domain, tlds_path, verbose=False):
         try:
             dns.resolver.resolve(expanded, "A")
             exists = True
+            expanded_domains.append({"domain": expanded})
         except Exception:
             exists = False
 
-        expanded_domains.append({"domain": expanded, "exists": exists})
-
         emit(
                 'enum_update',
-                {'step': 'TLD Expansion', 'result': {"domain": expanded, "exists": exists} }
+                {'step': 'TLD Expansion', 'result': {"domain": expanded} }
             )
     
     # print(f"Total TLD expansions: {len(expanded_domains)}")

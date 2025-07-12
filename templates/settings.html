@@ -1,122 +1,86 @@
-
 {% extends "base.html" %}
-{% macro render_field(key, value, prefix='', show_label=true) %}
-    {% if prefix %}
-        {% set field_name = prefix ~ '[' ~ key ~ ']' %}
-    {% else %}
-        {% set field_name = key %}
-    {% endif %}
-    {% if value is mapping %}
-        <div class="ms-3 border-start ps-3 mb-3">
-            {% if show_label %}
-                <label class="form-label fw-bold">{{ key|capitalize }}</label>
-            {% endif %}
-            {% for subkey, subval in value.items() %}
-                {{ render_field(subkey, subval, field_name, true) }}
-            {% endfor %}
-        </div>
-    {% elif value is sequence and value is not string %}
-        <div class="mb-3">
-            <label class="form-label">{{ key|capitalize }}</label>
-            {% for item in value %}
-                <input type="text" class="form-control mb-1" id="{{ field_name }}_{{ loop.index0 }}" name="{{ field_name }}[{{ loop.index0 }}]" value="{{ item }}">
-            {% endfor %}
-            {% if value|length == 0 %}
-                <input type="text" class="form-control mb-1" id="{{ field_name }}_0" name="{{ field_name }}[0]" value="">
-            {% endif %}
-        </div>
-    {% elif value is boolean or value|string|lower in ['true', 'false'] %}
-        <div class="mb-3">
-            <label for="{{ field_name }}" class="form-label">{{ key|capitalize }}</label>
-            <input type="checkbox" class="form-check-input" id="{{ field_name }}" name="{{ field_name }}" {% if value or value|string|lower == 'true' %}checked{% endif %}>
-        </div>
-    {% elif value is number %}
-        <div class="mb-3">
-            <label for="{{ field_name }}" class="form-label">{{ key|capitalize }}</label>
-            <input type="number" class="form-control" id="{{ field_name }}" name="{{ field_name }}" value="{{ value }}">
-        </div>
-    {% else %}
-        <div class="mb-3">
-            <label for="{{ field_name }}" class="form-label">{{ key|capitalize }}</label>
-            <input type="text" class="form-control" id="{{ field_name }}" name="{{ field_name }}" value="{{ value }}">
-        </div>
-    {% endif %}
-{% endmacro %}
-
 {% block content %}
+<div class="dashboard-header mb-4 {% if theme == 'dark' %}bg-dark{% endif %}">
+    <h2><i class="fa fa-cog"></i> Settings</h2>
+</div>
 
-    <div class="dashboard-header mb-4 {% if theme == 'dark' %}bg-dark{% endif %}">
-        <h2><i class="fa-solid fa-cog"></i> Settings</h2>
-        <p class="text-secondary mb-0">Configure your AutoDNS settings.</p>
+<div class="card shadow-sm {% if theme == 'dark' %}bg-dark{% endif %} mb-4">
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('settings') }}">
+            <div class="mb-3">
+                <label for="theme" class="form-label">Theme</label>
+                <select id="theme" name="theme" class="form-select">
+                    <option value="light" {% if theme != 'dark' %}selected{% endif %}>Light</option>
+                    <option value="dark" {% if theme == 'dark' %}selected{% endif %}>Dark</option>
+                </select>
+            </div>
+            {% if config.api_keys %}
+            <h5>API Keys</h5>
+            {% for key, value in config.api_keys.items() %}
+            <div class="mb-3">
+                <label for="api_key_{{ key }}" class="form-label">{{ key }}</label>
+                <input type="text" class="form-control" id="api_key_{{ key }}" name="api_keys[{{ key }}]" value="{{ value }}">
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% if config.network %}
+            <h5>Network Settings</h5>
+            {% for key, value in config.network.items() %}
+            <div class="mb-3">
+                <label for="network_{{ key }}" class="form-label">{{ key }}</label>
+                <input type="text" class="form-control" id="network_{{ key }}" name="network[{{ key }}]" value="{{ value }}">
+            </div>
+            {% endfor %}
+            {% endif %}
+            <!--<div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="audit" name="audit" {% if config.audit %}checked{% endif %}>
+                <label class="form-check-label" for="audit">Enable Audit Logging</label>
+            </div>-->
+            <button type="submit" name="load_audit" value="true" class="btn btn-secondary mb-3">Load Audit Log</button>
+            <button type="submit" class="btn btn-primary mb-3">Save Settings</button>
+        </form>
+        {% if audit_log_content %}
+        <div class="card mt-3">
+            <div class="card-header {% if theme == 'dark' %}bg-dark{% else %}bg-secondary text-white{% endif %}">
+                <i class="fa fa-file-alt"></i> Audit Log Content
+            </div>
+            <div class="card-body" style="max-height: 400px; overflow-y: auto; background: #f8f9fa; padding: 1rem; border: 1px solid #ddd;">
+                <pre>{{ audit_log_content }}</pre>
+            </div>
+        </div>
+        {% endif %}
     </div>
+</div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="mb-3">
-          {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
+{% endblock %}
 
-    <div class="card shadow-sm {% if theme == 'dark' %}bg-dark{% endif %}">
-        <div class="card-header {% if theme == 'dark' %}bg-dark{% else %}bg-primary text-white{% endif %}">
-            <i class="fa fa-cogs"></i> Update Configuration
-        </div>
-        <div class="card-body">
-            <form method="post" action="{{ url_for('settings') }}">
-
-                {% for key, value in config.items() %}
-                    {{ render_field(key, value) }}
-                {% endfor %}
-                <button type="submit" class="btn btn-primary">Save Settings</button>
-            </form>
-            <!--{% if value is mapping %}
-                        <h5 class="mb-3">{{ key|capitalize }}</h5>
-                        {% for subkey, subval in value.items() %}
-                            {% if subval is mapping %}
-                                <h6 class="mb-2 ms-3">{{ subkey|capitalize }}</h6>
-                                <div class="ms-3">
-                                    {% for subsubkey, subsubval in subval.items() %}
-                                        {{ render_field(subsubkey, subsubval, key ~ '[' ~ subkey ~ '][') }}
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ render_field(subkey, subval, key ~ '[') }}
-                            {% endif %}
-                        {% endfor %}
-                        <hr class="my-4">
-                    {% else %}-->
-                    <!--{% endif %}-->
-                <!--<h5 class="mb-3">API Keys</h5>
-                {% for key, value in config.api_keys.items() %}
-                <div class="mb-3">
-                    <label for="{{ key }}" class="form-label">{{ key|capitalize }}</label>
-                    <input type="text" class="form-control" id="{{ key }}" name="api_keys[{{ key }}]" value="{{ value }}" placeholder="Enter your {{ key|capitalize }} API key">
-                </div>
-                {% endfor %}
-
-                <hr class="my-4">
-
-                <h5 class="mb-3">Network Settings</h5>
-                <div class="mb-3">
-                    <label for="timeout" class="form-label">Timeout (seconds)</label>
-                    <input type="number" class="form-control" id="timeout" name="network[timeout]" value="{{ config.network.timeout }}" min="1" placeholder="Enter timeout in seconds">
-                </div>
-                <div class="mb-3">
-                    <label for="retries" class="form-label">Retries</label>
-                    <input type="number" class="form-control" id="retries" name="network[retries]" value="{{ config.network.retries }}" min="0" placeholder="Enter number of retries">
-                </div>
-                
-                {% for key, value in config.items() %}
-                <div class="mb-3">
-                    <label for="{{ key }}" class="form-label">{{ key }}</label>
-                    <input type="text" class="form-control" id="{{ key }}" name="{{ key }}" value="{{ value }}">
-                </div>
-                {% endfor %}
-                -->
-        </div>
-    </div>
-
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loadAuditLogBtn = document.getElementById('loadAuditLogBtn');
+    if (loadAuditLogBtn) {
+        loadAuditLogBtn.addEventListener('click', function() {
+            console.log('Load Audit Log button clicked');
+            fetch('{{ url_for("get_audit_log") }}')
+                .then(response => {
+                    console.log('Fetch response received', response);
+                    if (!response.ok) {
+                        throw new Error('Failed to load audit log');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log('Audit log data received', data);
+                    document.getElementById('auditLogContent').textContent = data;
+                })
+                .catch(error => {
+                    console.error('Error loading audit log:', error);
+                    alert(error.message);
+                });
+        });
+    } else {
+        console.error('Load Audit Log button not found');
+    }
+});
+</script>
 {% endblock %}

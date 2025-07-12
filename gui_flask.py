@@ -1,10 +1,12 @@
+import io
 import eventlet
 import eventlet.wsgi
-from flask import Flask, render_template, request,redirect, url_for, flash
+from flask import Flask, render_template, request, Response,redirect, send_file, url_for, flash
 from flask_socketio import SocketIO,join_room, emit
 from werkzeug.utils import secure_filename
 from scripts.utils import validate_file_path, load_file_lines, save_results_to_file,stop_event
 import os
+import logging
 from core.passive import passive_enum
 from core.active import active_enum_flask
 from core.brute import brute_force, brute_force_flask
@@ -14,7 +16,16 @@ import asyncio
 from datetime import datetime
 from ruamel.yaml import YAML
 from dns_enum.tld_expansion import  tld_expand_flask
+from dns_enum.graph import visualize_dns_graph, generate_graph_image_from_history
 # eventlet.monkey_patch()  # Patch standard library to use eventlet for async I/O
+
+# Setup audit logger
+audit_logger = logging.getLogger('audit')
+audit_logger.setLevel(logging.INFO)
+audit_handler = logging.FileHandler(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'audit.log'))
+audit_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+audit_handler.setFormatter(audit_formatter)
+audit_logger.addHandler(audit_handler)
 
 # Get the default paths for subdomains and resolvers
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -125,6 +136,7 @@ def handle_stop_enum():
 
 @socketio.on('start_enum')
 def handle_start_enum(params):
+    audit_logger.info(f"Enumeration started with params: {params}")
     history = load_history()
     # Ensure the request has a session ID
     # if not request.sid:
@@ -155,17 +167,12 @@ def handle_start_enum(params):
             from dns_enum.ptr_lookup import ptr_lookup_flask
             output["PTR"] = ptr_lookup_flask(ptr, verbose)
         else:
-            if passive:
-                output["Passive"] = passive_enum(domain, None, verbose, all_engines=True)
                 # if sid:
-                socketio.emit('enum_update', {'step': 'Passive', 'result': output["Passive"]})
+            
             if active:
                 output["Active"] = active_enum_flask(domain, None, verbose)
                 # if sid:
-                # socketio.emit('enum_update', {'step': 'Active', 'result': output["Active"]})
-            if brute:
-                # if sid:
-                output["Brute-Force"] = brute_force_flask(domain, wordlist_file, resolver_file)
+                # socketio.emit('enum_update', {'step': 'Active', 'result': output["Active"]})   
             if doh:
                 output["DoH"] = dns_over_https_flask(domain, output_file=None, verbose=verbose)
                 # socketio.emit('enum_update', {'step': 'DoH', 'result': output["DoH"]})
@@ -174,7 +181,14 @@ def handle_start_enum(params):
                 # socketio.emit('enum_update', {'step': 'DoT', 'result': output["DoT"]})
             if tld:
                 output["TLD"] = tld_expand_flask(domain, tlds_path=DEFAULT_TLDS, verbose=verbose)
+            if passive:
+                output["Passive"] = passive_enum(domain, None, verbose, all_engines=True)
+                socketio.emit('enum_update', {'step': 'Passive', 'result': output["Passive"]})
+            if brute:
+                # if sid:
+                output["Brute-Force"] = brute_force_flask(domain, wordlist_file, resolver_file)
             
+
                
         """results_store[] = {
             'domain': domain,
@@ -194,14 +208,28 @@ def handle_start_enum(params):
         history.insert(0, entry)
         add_history_entry(entry)
             #save_history(history) -- removed for redundancy, now handled in add_history_entry
-        #socketio.emit('enum_complet', {'result': output}, room=sid)
+        #socketio.emit('enum_complete', {'result': output}, room=sid)
         
             #socketio.emit('enum_message', {'message': f"Enumeration complete.{output}", 'category': "success"}, room=sid)
         
         # if sid:
-        socketio.emit('enum_update', {'step': 'Complete', 'result': output})
+        socketio.emit('enum_complete', {'step': 'Complete', 'result': output})
+        
     except Exception as e:
         socketio.emit('enum_update', {'step': 'Error', 'result': str(e)})
+        audit_logger.error(f"Enumeration error: {str(e)}")
+    finally:
+        # Ensure the stop event is cleared after enumeration completes
+        stop_event.clear()
+        #leave_room(sid)
+    if output:
+            return render_template(
+            "dashboard.html",
+            history=load_history(),
+            result=output,
+            active_page='dashboard',
+            theme=load_config().get("ui", {}).get("theme", "dark")  # Default to dark theme if not set  
+        )    
         
     
 
@@ -213,90 +241,123 @@ def index():
     verbose_output = None
     theme = config.get("ui",{}).get("theme", "dark")  # Default to light theme if not set
     if request.method == 'POST':
-        """if "submit_enum" in request.form:
-            domain = request.form['domain']
-            passive = 'passive' in request.form
-            active = 'active' in request.form
-            brute = 'brute' in request.form
-            verbose = 'verbose' in request.form
-            tld = 'tld' in request.form
-            wordlist_file = validate_file_path('wordlist_file' in request.form, DEFAULT_SUBDOMAINS)
-            resolver_file = validate_file_path('resolver_file' in request.form, DEFAULT_RESOLVERS)
-            
-            
-            
-            if 'wordlist_file' in request.files and request.files['wordlist_file'].filename:
-                file = request.files['wordlist_file']
-                filename = secure_filename(file.filename)
-                wordlist_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(wordlist_path)
-            if 'resolver_file' in request.files and request.files['resolver_file'].filename:
-                file = request.files['resolver_file']
-                filename = secure_filename(file.filename)
-                resolver_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(resolver_file)
+        domain = request.form.get('domain', '').strip()
+        passive = 'passive' in request.form
+        active = 'active' in request.form
+        brute = 'brute' in request.form
+        verbose = 'verbose' in request.form
+        tld = 'tld' in request.form
+        wordlist_file = None
+        resolver_file = None
 
-            
-            params = {
-                'domain': domain,
-                'passive': passive,
-                'active': active,
-                'brute': brute,
-                'verbose': verbose,
-                'tld': tld,
-                'wordlist_file': wordlist_file,
-                'resolver_file': resolver_file
-            }
-            
-            enumeration_types = []
-            if passive: 
-                enumeration_types.append('Passive')
-            if active: 
-                enumeration_types.append('Active')
-            if brute: 
-                enumeration_types.append('Brute-force')
-                
-            if params:
-                #handle_start_enum(params)  # Start the enumeration in the background
-                result,types = run_enumeration(params)
-            #thread = threading.Thread(target=run_enumeration, args=(params))
-            #thread.start()
-            # Wait for the thread to finish
-            
+        if 'wordlist_file' in request.files and request.files['wordlist_file'].filename:
+            file = request.files['wordlist_file']
+            filename = secure_filename(file.filename)
+            wordlist_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(wordlist_path)
+            wordlist_file = wordlist_path
+        if 'resolver_file' in request.files and request.files['resolver_file'].filename:
+            file = request.files['resolver_file']
+            filename = secure_filename(file.filename)
+            resolver_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(resolver_file)
+
+        results = {}
+        enumeration_types = []
+        if passive:
+            enumeration_types.append('Passive')
+        if active:
+            enumeration_types.append('Active')
+        if brute:
+            enumeration_types.append('Brute-force')
+
+        output = {}
+        try:
+            if active:
+                output["Active"] = active_enum_flask(domain, None, verbose)
+            if tld:
+                output["TLD"] = tld_expand_flask(domain, tlds_path=DEFAULT_TLDS, verbose=verbose)
+            if passive:
+                output["Passive"] = passive_enum(domain, None, verbose, all_engines=True)
+            if brute:
+                output["Brute-Force"] = brute_force_flask(domain, wordlist_file, resolver_file)
+        except Exception as e:
+            output["Error"] = str(e)
+        results[domain] = output
+
+        entry = {
+            "domain": domain,
+            "types": list(output.keys()),
+            "result_key": os.urandom(8).hex(),
+            "params": {
+                "domain": domain,
+                "passive": passive,
+                "active": active,
+                "brute": brute,
+                "verbose": verbose,
+                "tld": tld,
+                "wordlist_file": wordlist_file,
+                "resolver_file": resolver_file
+            },
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "result": output
+        }
+        add_history_entry(entry)
+
+        results = {}
+        enumeration_types = []
+        if passive:
+            enumeration_types.append('Passive')
+        if active:
+            enumeration_types.append('Active')
+        if brute:
+            enumeration_types.append('Brute-force')
+
+        for domain in domains:
+            output = {}
+            try:
+                if active:
+                    output["Active"] = active_enum_flask(domain, None, verbose)
+                if tld:
+                    output["TLD"] = tld_expand_flask(domain, tlds_path=DEFAULT_TLDS, verbose=verbose)
+                if passive:
+                    output["Passive"] = passive_enum(domain, None, verbose, all_engines=True)
+                if brute:
+                    output["Brute-Force"] = brute_force_flask(domain, wordlist_file, resolver_file)
+            except Exception as e:
+                output["Error"] = str(e)
+            results[domain] = output
+
             entry = {
+                "domain": domain,
+                "types": list(output.keys()),
+                "result_key": os.urandom(8).hex(),
+                "params": {
                     "domain": domain,
-                    "types": list(types),
-                    "result_key": os.urandom(8).hex(),
-                    "params": params,
-                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "result": result,
-                }
-            
-            #history.insert(0, entry)
+                    "passive": passive,
+                    "active": active,
+                    "brute": brute,
+                    "verbose": verbose,
+                    "tld": tld,
+                    "wordlist_file": wordlist_file,
+                    "resolver_file": resolver_file
+                },
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "result": output
+            }
             add_history_entry(entry)
-            #save_history(history) -- removed for redundancy, now handled in add_history_entry
-            flash("Enumeration complete.", "success")
-        
-        # Handling settings update
-        elif "save_config" in request.form:
-            # Example: update a config setting (customize as needed)
-            new_value = request.form.get("config_option", "")
-            config["config_option"] = new_value
-            save_config(config)
-            flash("Configuration updated.", "info")
-        ##flash('Enumeration started, please refresh to see results.', 'info')
-       # return redirect(url_for('index'))
-       """
-       
+
+        flash("Enumeration complete.", "success")
+        result = results
+
     # Show latest result if available
     history = load_history()
-    if history:
+    if history and not result:
         result = history[0]
-    
-    
+
     return render_template(
         "dashboard.html",
-        history=load_history(),
+        history=history,
         result=result,
         config=config,
         active_page='dashboard',
@@ -310,7 +371,7 @@ def delete_history(result_key):
     new_history = [entry for entry in history if entry['result_key'] != result_key]
     save_history(new_history)
     flash("Enumeration history entry deleted.", "success")
-    return redirect(url_for('index'))
+    return redirect(url_for('history'))
 
 @app.route('/redo_history/<result_key>', methods=['POST'])
 def redo_history(result_key):
@@ -340,48 +401,124 @@ def redo_history(result_key):
 def settings():
     config = load_config()  # Load the current configuration from the YAML file
 
+    audit_log_content = None
     if request.method == 'POST':
-        theme = request.form.get("theme", {})
-        config['ui']['theme'] = theme  # Update the theme in the configuration
-        
-        # Update API keys
-        for key in config["api_keys"]:
-            form_key = f"api_keys[{key}]"
-            if form_key in request.form:
-                #for key in config['api_keys']:
-                config['api_keys'][key] = request.form.get(form_key, config['api_keys'][key])
+        if 'load_audit' in request.form:
+            try:
+                with open('audit.log', 'r') as f:
+                    audit_log_content = f.read()
+            except Exception as e:
+                audit_log_content = f"Error reading audit log: {str(e)}"
+        else:
+            theme = request.form.get("theme", {})
+            config['ui']['theme'] = theme  # Update the theme in the configuration
+            
+            # Update API keys
+            for key in config["api_keys"]:
+                form_key = f"api_keys[{key}]"
+                if form_key in request.form:
+                    #for key in config['api_keys']:
+                    config['api_keys'][key] = request.form.get(form_key, config['api_keys'][key])
 
-        # Update network settings
-        for key in config['network']:
-            form_key = f"network[{key}]"
-            if form_key in request.form:
-                config['network'][key] = request.form.get(form_key, config['network'][key])
-        #if 'network[timeout]' or 'network[retries]' in request.form:
-         #   config['network']['timeout'] = int(request.form.get("network[timeout]", config['network']['timeout']))
-          #  config['network']['retries'] = int(request.form.get("network[retries]", config['network']['retries']))
-        
-        save_config(config)  # Save the updated configuration to the YAML file
-        flash("Settings updated successfully.", "success")
-        return redirect(url_for('settings'))
+            # Update network settings
+            for key in config['network']:
+                form_key = f"network[{key}]"
+                if form_key in request.form:
+                    config['network'][key] = request.form.get(form_key, config['network'][key])
+            #if 'network[timeout]' or 'network[retries]' in request.form:
+            #   config['network']['timeout'] = int(request.form.get("network[timeout]", config['network']['timeout']))
+            #  config['network']['retries'] = int(request.form.get("network[retries]", config['network']['retries']))
+            
+            audit = request.form.get("audit", "off")
+            config ['audit'] = audit == 'on'  # Convert to boolean
+            save_config(config)  # Save the updated configuration to the YAML file
+            flash("Settings updated successfully.", "success")
+            return redirect(url_for('settings'))
     
     theme = config.get("ui", {}).get("theme", "dark")
     return render_template(
         'settings.html',
         config=config,
         active_page='settings',
-        theme=theme
+        theme=theme,
+        audit_log_content=audit_log_content
         )
+
+@app.route('/audit_log', methods=['GET'])
+def get_audit_log():
+    try:
+        with open('audit.log', 'r') as f:
+            content = f.read()
+        return content, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+    except Exception as e:
+        return f"Error reading audit log: {str(e)}", 500
 
 @app.route('/history', methods=['GET'])
 def history():
     history = load_history()
+    domain_filter = request.args.get('domain', '').strip().lower()
+    type_filter = request.args.get('type', '').strip().lower()
+
+    if domain_filter or type_filter:
+        filtered_history = []
+        for entry in history:
+            domain_match = True
+            type_match = True
+            if domain_filter:
+                domain_match = domain_filter in entry.get('domain', '').lower()
+            if type_filter:
+                types = [t.lower() for t in entry.get('types', [])]
+                type_match = type_filter in types
+            if domain_match and type_match:
+                filtered_history.append(entry)
+        history = filtered_history
+
     theme = load_config().get("ui", {}).get("theme", "dark")
     return render_template('history.html', history=history, active_page='history', theme=theme)
+
+@app.route('/history/<result_key>', methods=['GET'])
+def view_history_entry(result_key):
+    history = load_history()
+    entry = next((h for h in history if h['result_key'] == result_key), None)
+    if not entry:
+        return "History entry not found", 404
+    theme = load_config().get("ui", {}).get("theme", "dark")
+    return render_template('history_entry.html', entry=entry, active_page='history', theme=theme)
+
+
+@app.route('/export_history/<result_key>', methods=['GET'])
+def export_history(result_key):
+    history = load_history()
+    entry = next((h for h in history if h['result_key'] == result_key), None)
+    if not entry:
+        return "History entry not found", 404
+    # Prepare JSON data for download
+    json_data = json.dumps(entry, indent=2)
+    # Create a BytesIO stream and write the JSON data
+    buffer = io.BytesIO()
+    buffer.write(json_data.encode('utf-8'))
+    buffer.seek(0)
+    filename = f"history_export_{result_key}.json"
+    return send_file(buffer, as_attachment=True, download_name=filename, mimetype='application/json')
 
 @app.route('/result/<key>', methods=['GET'])
 def results(key):
     result = results_store.get(key, None)
     return render_template('dashboard.html', result=result, key=key, history=load_history())
-    
+
+
+@app.route('/graph_image')
+def graph_image():
+    # Get result_key from query params to identify enumeration or history entry
+    result_key = request.args.get('result_key')
+    # Load history and find matching entry
+    history = load_history()
+    entry = next((h for h in history if h['result_key'] == result_key), None)
+    if not entry:
+        return "Graph data not found", 404
+    # Use helper function to generate image bytes from history entry
+    img_bytes = generate_graph_image_from_history(entry)
+    return Response(img_bytes, mimetype='image/png')
+
 if __name__ == '__main__':
     socketio.run(app,debug=True)

@@ -23,7 +23,7 @@
         </div>
         <div class="card-body">
             {% if show_form is not defined or show_form %}
-            <form id="enumForm" method="post">
+            <form id="enumForm" method="post" enctype="multipart/form-data">
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label for="inputType" class="form-label mb-3">Input Type</label>
@@ -81,9 +81,10 @@
                         <div class="col-md-2 d-flex align-items-end">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="verbose" id="verbose">
-                                <label class="form-check-label" for="verbose">graph</label>
+                                <label class="form-check-label" for="verbose">verbose</label>
                             </div>
                         </div>
+                        
                         <div class="col-md-4">
                             <label for="wordlist" class="form-label">Wordlist (Brute-force, optional)</label>
                             <input type="file" class="form-control" name="wordlist_file" id="wordlist_file">
